@@ -23,7 +23,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item editItem(long userId, long itemId, Item item) {
-        log.info(format("Обновлён предмет: %s", item));
+        log.info(format("Обновлён предмет: %s", itemId));
         return itemRepository.updateItem(userId, itemId, item);
     }
 

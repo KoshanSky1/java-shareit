@@ -42,15 +42,10 @@ public class ItemRepositoryImpl implements ItemRepository {
         if (!itemUpdated.getOwner().getId().equals(userId)) {
             throw new UserNotFoundException("Пользователи не совпадают");
         }
-        if (item.getName() != null) {
-            itemUpdated.setName(item.getName());
-        }
-        if (item.getDescription() != null) {
-            itemUpdated.setDescription(item.getDescription());
-        }
-        if (item.getAvailable() != itemUpdated.getAvailable() && item.getAvailable() != null) {
-            itemUpdated.setAvailable(item.getAvailable());
-        }
+
+        itemUpdated.setName(getStringValueOrDefault(item.getName(), itemUpdated.getName()));
+        itemUpdated.setDescription(getStringValueOrDefault(item.getDescription(), itemUpdated.getDescription()));
+        itemUpdated.setAvailable(getBooleanValueOrDefault(item.getAvailable(), itemUpdated.getAvailable()));
 
         return itemUpdated;
     }
@@ -89,6 +84,14 @@ public class ItemRepositoryImpl implements ItemRepository {
             }
         }
         return foundItems;
+    }
+
+    private static String getStringValueOrDefault(String value, String defaultValue) {
+        return value == null ? defaultValue : value;
+    }
+
+    private static boolean getBooleanValueOrDefault(Boolean value, boolean defaultValue) {
+        return value == null ? defaultValue : value;
     }
 
 }
