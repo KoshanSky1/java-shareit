@@ -27,9 +27,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         log.info("---START CREATE USER ENDPOINT---");
-        return new ResponseEntity<>(userService.createUser(toUser(userDto)), HttpStatus.OK);
+        return new ResponseEntity<>(toUserDto(userService.createUser(toUser(userDto))), HttpStatus.OK);
     }
 
     @PatchMapping("/{idUser}")
@@ -47,7 +47,7 @@ public class UserController {
     @GetMapping("/{idUser}")
     public ResponseEntity<UserDto> findUser(@PathVariable long idUser) {
         log.info("---START FIND USER ENDPOINT---");
-        return new ResponseEntity<>(toUserDto(userService.getUser(idUser)), HttpStatus.OK);
+        return new ResponseEntity<>(toUserDto(userService.getUser(idUser).orElseThrow()), HttpStatus.OK);
     }
 
     @GetMapping

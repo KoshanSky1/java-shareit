@@ -6,12 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.practicum.shareit.item.dto.ItemMapper.toItem;
+import static ru.practicum.shareit.item.dto.ItemMapper.*;
 
 /**
  * TODO Sprint add-controllers.
@@ -23,6 +26,7 @@ import static ru.practicum.shareit.item.dto.ItemMapper.toItem;
 @RequestMapping(path = "/items")
 public class ItemController {
     private final ItemService itemService;
+    private final UserService userService;
     private static final String SHARER_USER_ID = "X-Sharer-User-Id";
 
     @PostMapping
@@ -40,16 +44,16 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<Item> findItem(@RequestHeader(SHARER_USER_ID) long userId,
-                                         @PathVariable long itemId) {
+    public ItemDtoWithBooking findItem(@RequestHeader(SHARER_USER_ID) long userId,
+                                       @PathVariable long itemId) {
         log.info("---START FIND ITEM BY ID ENDPOINT---");
-        return new ResponseEntity<>(itemService.getItem(itemId), HttpStatus.OK);
+        return itemService.getItemWithBooking(userId, itemId);
     }
 
     @GetMapping
-    public List<Item> findItemsByUser(@RequestHeader(SHARER_USER_ID) long userId) {
+    public List<ItemDtoWithBooking> findItemsByUser(@RequestHeader(SHARER_USER_ID) long ownerId) {
         log.info("---START FIND ITEMS BY USER ENDPOINT---");
-        return itemService.getItems(userId);
+        return itemService.getItems(ownerId);
     }
 
     @GetMapping("/search")
@@ -57,6 +61,13 @@ public class ItemController {
                                                   @RequestParam String text) {
         log.info("---START SEARCH ITEMS ENDPOINT---");
         return new ResponseEntity<>(itemService.searchItems(userId, text), HttpStatus.OK);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@RequestHeader(SHARER_USER_ID) long userId,
+                                    @PathVariable long itemId, @Valid @RequestBody CommentDto commentDto) {
+        log.info("---START CREATE COMMENT ENDPOINT---");
+        return toCommentDto(itemService.addNewComment(userId, itemId, toComment(commentDto, userService.getUser(userId).orElseThrow())));
     }
 
 }
