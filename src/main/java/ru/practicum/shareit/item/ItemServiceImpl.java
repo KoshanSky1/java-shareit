@@ -75,11 +75,9 @@ public class ItemServiceImpl implements ItemService {
         List<Item> items = repository.findAllByOwnerId(ownerId);
 
         for (Item item : items) {
-            Booking last = bookingRepository.findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc(item.getId(),
-                    LocalDateTime.now(), BookingStatus.APPROVED);
-            Booking next = bookingRepository.findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc(item.getId(),
-                    LocalDateTime.now(), BookingStatus.APPROVED);
-            List<CommentDto> comments = commentRepository.findAllByItem_Id(item.getId());
+            Booking last = getLastBooking(item.getId());
+            Booking next = getNextBooking(item.getId());
+            List<CommentDto> comments = getComments(item.getId());
 
             if (last != null && next != null) {
                 itemsWithBookings.add(toItemDtoWithBooking(item, toBookingReducedDto(last), toBookingReducedDto(next),
@@ -107,10 +105,8 @@ public class ItemServiceImpl implements ItemService {
         log.info(format("Сформирован список предметов для пользователя с id= %s", userId));
 
         if (userId == item.getOwner().getId()) {
-            last = bookingRepository.findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc(itemId,
-                    LocalDateTime.now(), BookingStatus.APPROVED);
-            next = bookingRepository.findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc(itemId,
-                    LocalDateTime.now(), BookingStatus.APPROVED);
+            last = getLastBooking(itemId);
+            next = getNextBooking(itemId);
 
             if (last != null && next != null) {
                 return toItemDtoWithBooking(item, toBookingReducedDto(last), toBookingReducedDto(next), comments);
@@ -139,17 +135,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Comment addNewComment(long userId, long itemId, Comment comment) {
-        Booking booking1 = null;
+        Booking bookingForAComment = null;
         List<Booking> bookings = bookingRepository.findByBooker_Id(userId);
         for (Booking booking : bookings) {
             if (booking.getItem().getId() == itemId) {
-                booking1 = booking;
+                bookingForAComment = booking;
             }
         }
-        if (booking1 == null || comment.getText().isEmpty()) {
+        if (bookingForAComment == null || comment.getText().isEmpty()) {
             throw new ItemValidationException("Комментарий не может быть пустым");
         }
-        if (booking1.getEnd().isAfter(LocalDateTime.now())) {
+        if (bookingForAComment.getEnd().isAfter(LocalDateTime.now())) {
             throw new ItemValidationException("Бронирование еще не завершено");
         }
         log.info(format("Создан коментарий: %s", comment));
@@ -168,6 +164,20 @@ public class ItemServiceImpl implements ItemService {
 
     private static boolean getBooleanValueOrDefault(Boolean value, boolean defaultValue) {
         return value == null ? defaultValue : value;
+    }
+
+    private Booking getLastBooking(long itemId) {
+        return bookingRepository.findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc(itemId,
+                LocalDateTime.now(), BookingStatus.APPROVED);
+    }
+
+    private Booking getNextBooking(long itemId) {
+        return bookingRepository.findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc(itemId,
+                LocalDateTime.now(), BookingStatus.APPROVED);
+    }
+
+    private List<CommentDto> getComments(long itemId) {
+        return commentRepository.findAllByItem_Id(itemId);
     }
 
 }
