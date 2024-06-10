@@ -143,10 +143,10 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         if (bookingForAComment == null || comment.getText().isEmpty()) {
-            throw new ItemValidationException("Комментарий не может быть пустым");
+            throw new ItemValidationException("Комментарий не может быть пустым.");
         }
         if (bookingForAComment.getEnd().isAfter(LocalDateTime.now())) {
-            throw new ItemValidationException("Бронирование еще не завершено");
+            throw new ItemValidationException("Бронирование еще не завершено.");
         }
         log.info(format("Создан коментарий: %s", comment));
         comment.setItem(getItem(itemId).orElseThrow());
