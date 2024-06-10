@@ -91,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         itemsWithBookings.sort(Comparator.comparing(ItemDtoWithBooking::getId));
-        log.info(format("Сформирован список предметов для пользователя с id= %s", ownerId));
+        log.info(format("Сформирован список предметов для пользователя id= %s", ownerId));
 
         return itemsWithBookings;
     }
@@ -102,7 +102,7 @@ public class ItemServiceImpl implements ItemService {
         Booking last = null;
         Booking next = null;
         List<CommentDto> comments = commentRepository.findAllByItem_Id(item.getId());
-        log.info(format("Сформирован список предметов для пользователя с id= %s", userId));
+        log.info(format("Сформирован список предметов для пользователя  id= %s", userId));
 
         if (userId == item.getOwner().getId()) {
             last = getLastBooking(itemId);
