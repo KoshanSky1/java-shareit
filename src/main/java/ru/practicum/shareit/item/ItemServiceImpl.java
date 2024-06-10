@@ -63,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Optional<Item> getItem(long itemId) {
         if (repository.findById(itemId).isEmpty()) {
-            throw new ItemNotFoundException(format("Вещь с id = [%s] не существует", itemId));
+            throw new ItemNotFoundException(format("Вещь с id  = [%s] не существует", itemId));
         }
 
         return repository.findById(itemId);
