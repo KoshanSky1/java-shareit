@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
 import ru.practicum.shareit.item.model.Comment;
@@ -19,6 +18,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static ru.practicum.shareit.booking.BookingStatus.APPROVED;
 import static ru.practicum.shareit.booking.dto.BookingMapper.toBookingReducedDto;
 import static ru.practicum.shareit.item.dto.ItemMapper.toItemDtoWithBooking;
 
@@ -72,24 +74,36 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDtoWithBooking> getItems(long ownerId) {
         List<ItemDtoWithBooking> itemsWithBookings = new ArrayList<>();
+
         List<Item> items = repository.findAllByOwnerId(ownerId);
 
+        Map<Item, List<CommentDto>> comments = commentRepository.findAllByItemIn(items)
+                .stream()
+                .collect(groupingBy(CommentDto::getItem, toList()));
+
+        Map<Item, List<Booking>> bookings = bookingRepository.findAllByItemIn(items)
+                .stream()
+                .collect(groupingBy(Booking::getItem, toList()));
+
         for (Item item : items) {
-            Booking last = getLastBooking(item.getId());
-            Booking next = getNextBooking(item.getId());
-            List<CommentDto> comments = getComments(item.getId());
+            Booking last = getLastBooking(bookings.get(item));
+            Booking next = getNextBooking(bookings.get(item));
 
             if (last != null && next != null) {
                 itemsWithBookings.add(toItemDtoWithBooking(item, toBookingReducedDto(last), toBookingReducedDto(next),
-                        comments));
+                        comments.get(item)));
             } else if (last != null) {
-                itemsWithBookings.add(toItemDtoWithBooking(item, toBookingReducedDto(last), null, comments));
+                itemsWithBookings.add(toItemDtoWithBooking(item, toBookingReducedDto(last), null,
+                        comments.get(item)));
             } else if (next != null) {
-                itemsWithBookings.add(toItemDtoWithBooking(item, null, toBookingReducedDto(next), comments));
+                itemsWithBookings.add(toItemDtoWithBooking(item, null, toBookingReducedDto(next),
+                        comments.get(item)));
             } else {
-                itemsWithBookings.add(toItemDtoWithBooking(item, null, null, comments));
+                itemsWithBookings.add(toItemDtoWithBooking(item, null, null,
+                        comments.get(item)));
             }
         }
+
         itemsWithBookings.sort(Comparator.comparing(ItemDtoWithBooking::getId));
         log.info(format("Сформирован список предметов для пользователя id= %s", ownerId));
 
@@ -105,8 +119,10 @@ public class ItemServiceImpl implements ItemService {
         log.info(format("Сформирован список предметов для пользователя  id= %s", userId));
 
         if (userId == item.getOwner().getId()) {
-            last = getLastBooking(itemId);
-            next = getNextBooking(itemId);
+            last = bookingRepository.findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc(item.getId(),
+                    LocalDateTime.now(), APPROVED);
+            next = bookingRepository.findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc(item.getId(),
+                    LocalDateTime.now(), APPROVED);
 
             if (last != null && next != null) {
                 return toItemDtoWithBooking(item, toBookingReducedDto(last), toBookingReducedDto(next), comments);
@@ -166,18 +182,40 @@ public class ItemServiceImpl implements ItemService {
         return value == null ? defaultValue : value;
     }
 
-    private Booking getLastBooking(long itemId) {
-        return bookingRepository.findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc(itemId,
-                LocalDateTime.now(), BookingStatus.APPROVED);
+    private Booking getLastBooking(List<Booking> bookings) {
+        Booking last = null;
+
+        if (bookings != null) {
+            bookings
+                    .stream()
+                    .filter(b -> b.getStatus() == APPROVED)
+                    .sorted(Comparator.comparing(Booking::getStart));
+
+            for (Booking booking : bookings) {
+                if (booking.getStart().isBefore(LocalDateTime.now())) {
+                    last = booking;
+                }
+            }
+        }
+        return last;
     }
 
-    private Booking getNextBooking(long itemId) {
-        return bookingRepository.findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc(itemId,
-                LocalDateTime.now(), BookingStatus.APPROVED);
-    }
+    private Booking getNextBooking(List<Booking> bookings) {
+        Booking next = null;
 
-    private List<CommentDto> getComments(long itemId) {
-        return commentRepository.findAllByItem_Id(itemId);
+        if (bookings != null) {
+            bookings
+                    .stream()
+                    .filter(b -> b.getStatus() == APPROVED)
+                    .sorted(Comparator.comparing(Booking::getStart));
+
+            for (Booking booking : bookings) {
+                if (booking.getStart().isAfter(LocalDateTime.now())) {
+                    next = booking;
+                }
+            }
+        }
+        return next;
     }
 
 }

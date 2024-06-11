@@ -15,5 +15,4 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "and i.available = true"
     )
     List<Item> search(String text);
-
 }
