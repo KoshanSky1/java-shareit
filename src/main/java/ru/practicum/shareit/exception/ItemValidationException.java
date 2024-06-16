@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.exception;
 
 public class ItemValidationException extends RuntimeException {
     public ItemValidationException(String message) {
