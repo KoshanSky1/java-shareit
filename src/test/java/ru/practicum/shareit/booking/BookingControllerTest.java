@@ -131,5 +131,5 @@ class BookingControllerTest {
     void getBookingInformation() throws Exception {
         when(bookingService.getBookingById(anyLong(), anyInt()))
                 .thenReturn(Optional.of(booking));
-        }
     }
+}
