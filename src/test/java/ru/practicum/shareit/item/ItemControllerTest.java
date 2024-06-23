@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -143,5 +144,11 @@ class ItemControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(SHARER_USER_ID, 1));
+    }
+
+    @Test
+    void findItem() {
+        when(itemService.getItem(anyLong()))
+                .thenReturn(Optional.of(item));
     }
 }

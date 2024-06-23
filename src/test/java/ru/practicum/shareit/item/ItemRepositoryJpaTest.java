@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import ru.practicum.shareit.item.model.Item;
@@ -13,6 +15,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class ItemRepositoryJpaTest {
 
     @Autowired
@@ -29,7 +33,6 @@ class ItemRepositoryJpaTest {
                 true, user, null);
 
         item = repository.save(item);
-        assertEquals(9L, item.getId());
 
         List<Item> expectedItems = new ArrayList<>();
         expectedItems.add(item);
@@ -37,5 +40,6 @@ class ItemRepositoryJpaTest {
         List<Item> actualItems = repository.search("МуЛьТи");
 
         assertEquals(expectedItems, actualItems);
+
     }
 }

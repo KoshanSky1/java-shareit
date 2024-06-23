@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import ru.practicum.shareit.exception.BookingStateNotFoundException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -10,7 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
+import static ru.practicum.shareit.booking.BookingServiceImpl.findByState;
 import static ru.practicum.shareit.booking.BookingState.ALL;
 
 class BookingServiceImplTest {
@@ -103,5 +109,15 @@ class BookingServiceImplTest {
                 .thenReturn(Optional.of(bookingNumberOne));
     }
 
+    @Test
+    void findByStateTest() {
+        String name = "FINALLY";
 
+        BookingStateNotFoundException thrown = assertThrows(
+                BookingStateNotFoundException.class,
+                () -> findByState(name),
+                "Unknown state: " + name
+        );
+        assertTrue(thrown.getMessage().contains("Unknown state: " + name));
+    }
 }

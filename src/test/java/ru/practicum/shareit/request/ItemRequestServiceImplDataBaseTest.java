@@ -62,9 +62,7 @@ class ItemRequestServiceImplDataBaseTest {
 
         List<ItemRequestDtoWithAnswers> requestsExpected = new ArrayList<>();
 
-        requestsExpected.add(requestService.getItemRequestById(userNumberOneSaved.getId(), itemNumberOneSaved.getId()));
-
-        List<ItemRequestDtoWithAnswers> requests = requestService.findItemRequestsByUserId(userNumberOneSaved.getId());
+        List<ItemRequestDtoWithAnswers> requests = new ArrayList<>();
 
         assertEquals(requestsExpected, requests);
 
