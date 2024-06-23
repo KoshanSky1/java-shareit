@@ -28,7 +28,7 @@ class ItemServiceImplDataBaseTest {
 
     private final User userNumberOne = new User(null, "Sasha", "Sasha@mail.ru");
 
-    private final User userNumberTwo = new User(null, "Lenar", "Lenar@xakep.ru");
+    private final User userNumberTwo = new User(null, "Mark", "Maruk@xakep.ru");
 
     private final Item itemNumberOne = new Item(null, "Алмазная пила", "Алмазная пила Makita",
             true, userNumberTwo, null);

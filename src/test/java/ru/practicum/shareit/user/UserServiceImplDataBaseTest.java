@@ -20,7 +20,7 @@ class UserServiceImplDataBaseTest {
 
     private final UserServiceImpl userService;
 
-    private final User owner = new User(null, "Linar", "Linar@xakep.ru");
+    private final User owner = new User(null, "Persey", "Persik@mail.ru");
 
     private final User booker = new User(null, "Lenar", "Lenar@xakep.ru");
 
