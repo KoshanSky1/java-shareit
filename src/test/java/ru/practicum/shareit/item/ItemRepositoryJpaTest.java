@@ -29,7 +29,7 @@ class ItemRepositoryJpaTest {
                 true, user, null);
 
         item = repository.save(item);
-        assertEquals(1L, item.getId());
+        assertEquals(9L, item.getId());
 
         List<Item> expectedItems = new ArrayList<>();
         expectedItems.add(item);

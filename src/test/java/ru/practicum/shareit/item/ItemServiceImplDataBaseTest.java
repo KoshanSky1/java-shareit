@@ -26,7 +26,7 @@ class ItemServiceImplDataBaseTest {
 
     private final ItemServiceImpl itemService;
 
-    private final User userNumberOne = new User(null, "Linar", "Linar@xakep.ru");
+    private final User userNumberOne = new User(null, "Sasha", "Sasha@mail.ru");
 
     private final User userNumberTwo = new User(null, "Lenar", "Lenar@xakep.ru");
 

@@ -14,7 +14,7 @@ class UserServiceImplTest {
 
     UserService userService = Mockito.mock(UserService.class);
 
-    private final User owner = new User(1L, "Linar", "Linar@xakep.ru");
+    private final User owner = new User(15L, "Lena", "Lena@yandex.ru");
 
     private final User booker = new User(1L, "Lenar", "Lenar@xakep.ru");
 
