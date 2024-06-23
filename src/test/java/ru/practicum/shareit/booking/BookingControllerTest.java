@@ -7,22 +7,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest {
@@ -41,18 +42,17 @@ class BookingControllerTest {
 
     private static final String SHARER_USER_ID = "X-Sharer-User-Id";
 
-    private final User owner = new User(null, "Linar", "Linar@xakep.ru");
+    private final User owner = new User(1L, "Linar", "Linar@xakep.ru");
 
-    private final User booker = new User(null, "Lenar", "Lenar@xakep.ru");
-    private final Item item = new Item(null, "Мультипекарь",
+    private final User booker = new User(2L, "Lenar", "Lenar@xakep.ru");
+    private final Item item = new Item(1L, "Мультипекарь",
             "Мультипекарь Redmond со сменными панелями", true, owner, null);
 
     private final BookingDto bookingDto = new BookingDto(
-            null,
-            1L,
+            1L, item.getId(),
             LocalDateTime.of(2024, 05, 23, 23, 33, 33),
             LocalDateTime.of(2024, 06, 23, 23, 33, 33),
-            1L);
+            booker.getId());
 
     private final Booking booking = new Booking(
             1L,
@@ -62,19 +62,22 @@ class BookingControllerTest {
             booker,
             BookingStatus.WAITING);
 
-
     @Test
     void createBooking() throws Exception {
         when(bookingService.createBooking(anyLong(), any()))
                 .thenReturn(booking);
 
         mvc.perform(post("/bookings")
-                        .content(mapper.writeValueAsString(bookingDto))
+                        .content(mapper.writeValueAsString(booking))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(SHARER_USER_ID, 1))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(booking.getId()), Long.class))
+                .andExpect(jsonPath("$.start", is("2024-05-23T23:33:33")))
+                .andExpect(jsonPath("$.end", is("2024-06-23T23:33:33")))
+                .andExpect(jsonPath("$.status", is(booking.getStatus().toString())));
     }
 
     @Test
@@ -124,4 +127,9 @@ class BookingControllerTest {
                 .andExpect(status().isOk());
     }
 
-}
+    @Test
+    void getBookingInformation() throws Exception {
+        when(bookingService.getBookingById(anyLong(), anyInt()))
+                .thenReturn(Optional.of(booking));
+        }
+    }

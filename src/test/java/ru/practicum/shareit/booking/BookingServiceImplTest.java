@@ -96,4 +96,12 @@ class BookingServiceImplTest {
                 .getAllBookingsForAllUserThings(1L, ALL, 0, 10);
     }
 
+    @Test
+    void testGetBookingById() {
+        Mockito
+                .when(bookingService.getBookingById(anyLong(), anyLong()))
+                .thenReturn(Optional.of(bookingNumberOne));
+    }
+
+
 }

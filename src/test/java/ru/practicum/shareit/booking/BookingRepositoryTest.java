@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.practicum.shareit.booking.BookingStatus.APPROVED;
+import static ru.practicum.shareit.booking.BookingStatus.WAITING;
 
 @DataJpaTest
 class BookingRepositoryTest {
@@ -37,13 +39,13 @@ class BookingRepositoryTest {
             "Мультипекарь Redmond со сменными панелями", true, owner, null);
 
     private final Booking bookingNumberOne = new Booking(null, LocalDateTime.now().minusMonths(1),
-            LocalDateTime.now().plusMonths(1), item, booker, BookingStatus.WAITING);
+            LocalDateTime.now().plusMonths(1), item, booker, WAITING);
 
     private final Booking bookingNumberTwo = new Booking(null, LocalDateTime.now().minusMonths(2),
-            LocalDateTime.now().minusMonths(1), item, booker, BookingStatus.WAITING);
+            LocalDateTime.now().minusMonths(1), item, booker, WAITING);
 
     private final Booking bookingNumberThree = new Booking(null, LocalDateTime.now().plusMonths(4),
-            LocalDateTime.now().plusMonths(5), item, booker, BookingStatus.WAITING);
+            LocalDateTime.now().plusMonths(5), item, booker, WAITING);
 
     @BeforeEach
     void beforeEach() {
@@ -108,7 +110,7 @@ class BookingRepositoryTest {
         expectedBookings.add(bookingNumberTwo);
         expectedBookings.add(bookingNumberThree);
 
-        List<Booking> actualBookings = repository.findByOwner_IdAndStatus(owner.getId(), BookingStatus.WAITING);
+        List<Booking> actualBookings = repository.findByOwner_IdAndStatus(owner.getId(), WAITING);
 
         assertEquals(expectedBookings, actualBookings);
     }
@@ -149,4 +151,91 @@ class BookingRepositoryTest {
         assertEquals(expectedBookings, actualBookings);
     }
 
+    @Test
+    void findByBooker_Id() {
+        List<Booking> expectedBookings = new ArrayList<>();
+        expectedBookings.add(bookingNumberOne);
+        expectedBookings.add(bookingNumberTwo);
+        expectedBookings.add(bookingNumberThree);
+
+        List<Booking> actualBookings = repository.findByBooker_Id(booker.getId());
+
+        assertEquals(expectedBookings, actualBookings);
+    }
+
+    @Test
+    void findByBooker_IdAndStartIsBeforeAndEndIsAfter() {
+        List<Booking> expectedBookings = new ArrayList<>();
+        expectedBookings.add(bookingNumberOne);
+        expectedBookings.remove(bookingNumberOne);
+
+        List<Booking> actualBookings = repository.findByBooker_IdAndStartIsBeforeAndEndIsAfter(booker.getId(),
+                LocalDateTime.now(), LocalDateTime.now().plusMonths(1));
+
+        assertEquals(expectedBookings, actualBookings);
+    }
+
+    @Test
+    void findByBooker_IdAndEndIsBefore() {
+        List<Booking> expectedBookings = new ArrayList<>();
+        expectedBookings.add(bookingNumberTwo);
+
+        List<Booking> actualBookings = repository.findByBooker_IdAndEndIsBefore(booker.getId(),
+                LocalDateTime.now());
+
+        assertEquals(expectedBookings, actualBookings);
+    }
+
+    @Test
+    void findByBooker_IdAndStartIsAfter() {
+        List<Booking> expectedBookings = new ArrayList<>();
+        expectedBookings.add(bookingNumberThree);
+
+        List<Booking> actualBookings = repository.findByBooker_IdAndStartIsAfter(booker.getId(),
+                LocalDateTime.now());
+
+        assertEquals(expectedBookings, actualBookings);
+    }
+
+    @Test
+    void findByBooker_IdAndStatus() {
+        List<Booking> expectedBookings = new ArrayList<>();
+
+        List<Booking> actualBookings = repository.findByBooker_IdAndStatus(booker.getId(),
+                BookingStatus.REJECTED);
+
+        assertEquals(expectedBookings, actualBookings);
+    }
+
+    @Test
+    void findAllByItemIn() {
+        List<Item> items = new ArrayList<>();
+        items.add(item);
+
+        List<Booking> expectedBookings = new ArrayList<>();
+        expectedBookings.add(bookingNumberOne);
+        expectedBookings.add(bookingNumberTwo);
+        expectedBookings.add(bookingNumberThree);
+
+        List<Booking> actualBookings = repository.findAllByItemIn(items);
+
+        assertEquals(expectedBookings, actualBookings);
+    }
+
+    @Test
+    void findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc() {
+
+        Booking booking = repository.findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc(1L,
+                LocalDateTime.now(), APPROVED);
+
+        assertEquals(null, booking);
+    }
+
+    @Test
+    void findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc() {
+        Booking booking = repository.findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc(1L,
+                LocalDateTime.now(), APPROVED);
+
+        assertEquals(null, booking);
+    }
 }
