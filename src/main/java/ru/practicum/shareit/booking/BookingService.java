@@ -10,9 +10,9 @@ public interface BookingService {
 
     Optional<Booking> getBookingById(long userId, long bookingId);
 
-    List<Booking> getAllBookingsByUserId(long userId, BookingState state);
+    List<Booking> getAllBookingsByUserId(long userId, BookingState state, int from, int size);
 
-    List<Booking> getAllBookingsForAllUserThings(long userId, BookingState state);
+    List<Booking> getAllBookingsForAllUserThings(long userId, BookingState state, int from, int size);
 
     void checkUserIngress(long userId, long bookingId);
 }
