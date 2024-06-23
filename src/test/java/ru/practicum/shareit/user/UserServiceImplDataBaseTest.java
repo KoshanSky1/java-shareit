@@ -22,7 +22,7 @@ class UserServiceImplDataBaseTest {
 
     private final User owner = new User(null, "Persey", "Persik@mail.ru");
 
-    private final User booker = new User(null, "Lenar", "Lenar@xakep.ru");
+    private final User booker = new User(null, "Nick", "Nicki@rambler.ru");
 
     @BeforeEach
     void beforeEach() {
