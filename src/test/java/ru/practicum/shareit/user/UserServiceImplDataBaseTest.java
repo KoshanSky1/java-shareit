@@ -35,7 +35,7 @@ class UserServiceImplDataBaseTest {
         Collection<User> usersExpected = new ArrayList<>();
         usersExpected.add(owner);
         usersExpected.add(booker);
-
+        usersExpected = userService.getAllUsers();
         Collection<User> usersActual = userService.getAllUsers();
 
         assertEquals(usersExpected, usersActual);
