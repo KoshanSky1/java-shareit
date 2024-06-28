@@ -48,7 +48,7 @@ class ItemControllerTest {
 
     private final User owner = new User(1L, "Linar", "Linar@xakep.ru");
 
-    private final User booker = new User(2l, "Lenar", "Lenar@xakep.ru");
+    private final User booker = new User(2L, "Lenar", "Lenar@xakep.ru");
 
     private final ItemDto itemDto = new ItemDto(1L, "Мультипекарь",
             "Мультипекарь Redmond со сменными панелями", true, owner, null);

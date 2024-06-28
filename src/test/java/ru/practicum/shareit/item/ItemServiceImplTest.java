@@ -248,9 +248,7 @@ class ItemServiceImplTest {
         itemDtoWithBooking.setComments(comments);
 
         ItemDtoWithBooking itemDtoWithBookings = itemService.getItemWithBooking(owner.getId(), itemDto.getId());
-        //ItemDtoWithBooking itemDtoWithBookings = itemService.getItemWithBooking(user.getId(), itemDto.getId());
-        // ItemDtoWithBooking itemDtoWithBookings = itemService.getItemWithBooking(booker.getId(), itemDto.getId());
-        System.out.println(itemDtoWithBookings);
+
         assertEquals(itemDtoWithBookings.getName(), itemDtoWithBooking.getName());
     }
 
@@ -278,9 +276,6 @@ class ItemServiceImplTest {
 
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
 
-        //List<Item> items = new ArrayList<>();
-        //items.add(itemWithoutRequest);
-
         List<Item> itemsActual = itemService.searchItems(owner.getId(), text, 7, 10);
 
         assertTrue(itemsActual.isEmpty());
@@ -296,7 +291,6 @@ class ItemServiceImplTest {
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
 
         List<Item> items = new ArrayList<>();
-        //items.add(itemWithoutRequest);
 
         List<Item> itemsActual = itemService.searchItems(owner.getId(), text, 0, 10);
 
