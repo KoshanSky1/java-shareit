@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.ItemValidationException;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.exception.UserNotFoundException;
 
@@ -22,6 +24,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static ru.practicum.shareit.booking.BookingStatus.APPROVED;
 import static ru.practicum.shareit.booking.dto.BookingMapper.toBookingReducedDto;
+import static ru.practicum.shareit.item.dto.ItemMapper.toItemDto;
 import static ru.practicum.shareit.item.dto.ItemMapper.toItemDtoWithBooking;
 
 @Slf4j
@@ -32,17 +35,32 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository requestRepository;
 
     @Override
-    public Item addNewItem(long userId, Item item) {
+    public ItemDto addNewItemWithoutRequest(long userId, Item item) {
         if (item.getName().isBlank() || item.getDescription() == null || item.getAvailable() == null) {
             throw new ItemValidationException("Не заполнено одно из обязательных полей: имя, описание или статус");
         }
         item.setOwner(userService.getUser(userId).orElseThrow());
+        item.setRequest(null);
         item.setAvailable(true);
         log.info(format("Создан предмет: %s", item));
         repository.save(item);
-        return repository.save(item);
+        return toItemDto(item);
+    }
+
+    @Override
+    public ItemDto addNewItemWithRequest(long userId, Item item, long requestId) {
+        if (item.getName().isBlank() || item.getDescription() == null || item.getAvailable() == null) {
+            throw new ItemValidationException("Не заполнено одно из обязательных полей: имя, описание или статус");
+        }
+        item.setOwner(userService.getUser(userId).orElseThrow());
+        item.setRequest(requestRepository.findById(requestId).orElseThrow());
+        item.setAvailable(true);
+        log.info(format("Создан предмет: %s", item));
+        repository.save(item);
+        return toItemDto(item);
     }
 
     @Override
@@ -72,7 +90,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoWithBooking> getItems(long ownerId) {
+    public List<ItemDtoWithBooking> getItems(long ownerId, int from, int size) {
+
         List<ItemDtoWithBooking> itemsWithBookings = new ArrayList<>();
 
         List<Item> items = repository.findAllByOwnerId(ownerId);
@@ -107,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
         itemsWithBookings.sort(Comparator.comparing(ItemDtoWithBooking::getId));
         log.info(format("Сформирован список предметов для пользователя id= %s", ownerId));
 
-        return itemsWithBookings;
+        return pagedResponse(itemsWithBookings, from, size);
     }
 
     @Override
@@ -140,13 +159,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> searchItems(long userId, String text) {
+    public List<Item> searchItems(long userId, String text, int from, int size) {
+
         List<Item> foundItems = new ArrayList<>();
         if (text.isEmpty()) {
             return foundItems;
         }
+        foundItems = repository.search(text);
         log.info(format("Сформирован список предметов, содержащих текст %s", text));
-        return repository.search(text);
+        return itemPagedResponse(foundItems, from, size);
     }
 
     @Override
@@ -216,6 +237,34 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         return next;
+    }
+
+    private List<ItemDtoWithBooking> pagedResponse(List<ItemDtoWithBooking> items, int from, int size) {
+        int totalBookings = items.size();
+        int toIndex = from + size;
+
+        if (from <= totalBookings) {
+            if (toIndex > totalBookings) {
+                toIndex = totalBookings;
+            }
+            return items.subList(from, toIndex);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private List<Item> itemPagedResponse(List<Item> items, int from, int size) {
+        int totalBookings = items.size();
+        int toIndex = from + size;
+
+        if (from <= totalBookings) {
+            if (toIndex > totalBookings) {
+                toIndex = totalBookings;
+            }
+            return items.subList(from, toIndex);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
 }
