@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.ItemNotFoundException;
+import ru.practicum.shareit.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.exception.ItemValidationException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDtoWithoutOwner;
@@ -140,7 +140,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public Optional<ItemRequest> findItemRequestById(long requestId) {
 
         if (repository.findById(requestId).isEmpty()) {
-            throw new ItemNotFoundException(format("Запрос с id  = [%s] не существует", requestId));
+            throw new ItemRequestNotFoundException(format("Запрос с id  = [%s] не существует", requestId));
         }
 
         return repository.findById(requestId);

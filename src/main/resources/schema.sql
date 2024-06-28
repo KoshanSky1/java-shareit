@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS items (
   owner_id INTEGER NOT NULL,
   request_id INTEGER,
   CONSTRAINT pk_item PRIMARY KEY (id),
-  CONSTRAINT items_users_fk FOREIGN KEY (request_id) REFERENCES PUBLIC.users(id),
+  CONSTRAINT items_users_fk FOREIGN KEY (owner_id) REFERENCES PUBLIC.users(id),
   CONSTRAINT items_requests_fk FOREIGN KEY (request_id) REFERENCES PUBLIC.requests(id)
 );
 

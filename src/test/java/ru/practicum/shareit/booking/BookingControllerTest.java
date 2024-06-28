@@ -101,7 +101,7 @@ class BookingControllerTest {
         when(bookingService.getAllBookingsByUserId(anyLong(), any(), anyInt(), anyInt()))
                 .thenReturn(bookings);
 
-        mvc.perform(patch("/bookings/1")
+        mvc.perform(get("/bookings")
                         .content(mapper.writeValueAsString(bookings))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -117,7 +117,7 @@ class BookingControllerTest {
         when(bookingService.getAllBookingsForAllUserThings(anyLong(), any(), anyInt(), anyInt()))
                 .thenReturn(bookings);
 
-        mvc.perform(patch("/bookings/1")
+        mvc.perform(get("/bookings/owner")
                         .content(mapper.writeValueAsString(bookings))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +129,14 @@ class BookingControllerTest {
 
     @Test
     void getBookingInformation() throws Exception {
-        when(bookingService.getBookingById(anyLong(), anyInt()))
+        when(bookingService.getBookingById(anyLong(), anyLong()))
                 .thenReturn(Optional.of(booking));
+
+        mvc.perform(get("/bookings/1")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(SHARER_USER_ID, 1))
+                .andExpect(status().isOk());
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exception.ItemRequestNotFoundException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,7 +52,7 @@ class ItemControllerTest {
 
     private final User owner = new User(1L, "Linar", "Linar@xakep.ru");
 
-    private final User booker = new User(null, "Lenar", "Lenar@xakep.ru");
+    private final User booker = new User(2l, "Lenar", "Lenar@xakep.ru");
 
     private final ItemDto itemDto = new ItemDto(1L, "Мультипекарь",
             "Мультипекарь Redmond со сменными панелями", true, owner, null);
@@ -67,8 +71,22 @@ class ItemControllerTest {
             null, null);
 
     @Test
-    void createItem() throws Exception {
+    void createItemWithoutRequest() throws Exception {
         when(itemService.addNewItemWithoutRequest(anyLong(), any()))
+                .thenReturn(itemDto);
+
+        mvc.perform(post("/items")
+                        .content(mapper.writeValueAsString(itemDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(SHARER_USER_ID, 1))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void createItemWithRequest() throws Exception {
+        when(itemService.addNewItemWithRequest(anyLong(), any(), anyLong()))
                 .thenReturn(itemDto);
 
         mvc.perform(post("/items")
@@ -124,8 +142,22 @@ class ItemControllerTest {
         when(itemService.searchItems(anyLong(), anyString(), anyInt(), anyInt()))
                 .thenReturn(items);
 
-        mvc.perform(get("/search")
+        mvc.perform(get("/items/search?text=мульти")
                         .content(mapper.writeValueAsString(items))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(SHARER_USER_ID, 1))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void createComment() throws Exception {
+
+        when(itemService.addNewComment(anyLong(), anyLong(), any()))
+                .thenReturn(comment);
+
+        mvc.perform(post("/1/comment")
+                        .content(mapper.writeValueAsString(comment))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -133,22 +165,18 @@ class ItemControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void createComment() throws Exception {
-        when(itemService.addNewComment(anyLong(), anyInt(), any()))
-                .thenReturn(comment);
 
-        mvc.perform(post("/1/comment")
-                .content(mapper.writeValueAsString(commentDto))
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(SHARER_USER_ID, 1));
-    }
 
     @Test
-    void findItem() {
+    void findItem() throws Exception {
         when(itemService.getItem(anyLong()))
                 .thenReturn(Optional.of(item));
+
+        mvc.perform(get("/items/1")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(SHARER_USER_ID, 1))
+                .andExpect(status().isOk());
     }
 }

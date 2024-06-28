@@ -13,29 +13,28 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-public class BookingDtoJsonTest {
+class BookingReducedDtoTest {
     @Autowired
-    private JacksonTester<BookingDto> json;
+    private JacksonTester<BookingReducedDto> json;
 
     private final User booker = new User(1L, "Lenar", "Lenar@xakep.ru");
 
     @Test
-    void toBookingDto() throws IOException {
-        BookingDto bookingDto = new BookingDto(
+    void toBookingReducedDto() throws IOException {
+        BookingReducedDto bookingReducedDto = new BookingReducedDto(
                 1L,
-                1L,
+                booker.getId(),
                 LocalDateTime.of(2024, 05, 23, 23, 33, 33),
-                LocalDateTime.of(2024, 07, 23, 23, 33, 33),
-                booker.getId()
+                LocalDateTime.of(2024, 07, 23, 23, 33, 33)
         );
 
-        JsonContent<BookingDto> result = json.write(bookingDto);
+        JsonContent<BookingReducedDto> result = json.write(bookingReducedDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathNumberValue("$.itemId").isEqualTo(1);
+        assertThat(result).extractingJsonPathNumberValue("$.bookerId").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.start").isEqualTo("2024-05-23T23:33:33");
         assertThat(result).extractingJsonPathStringValue("$.end").isEqualTo("2024-07-23T23:33:33");
-        assertThat(result).extractingJsonPathNumberValue("$.bookerId").isEqualTo(1);
 
     }
+
 }

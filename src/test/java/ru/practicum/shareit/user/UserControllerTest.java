@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.model.User;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -83,5 +84,29 @@ class UserControllerTest {
                         .header(SHARER_USER_ID, 1))
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    void deleteUser() throws Exception {
+
+        mvc.perform(delete("/users/1")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(SHARER_USER_ID, 1))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void findUser() throws Exception {
+        when(userService.getUser(anyLong()))
+                .thenReturn(Optional.of(userNumberOne));
+
+        mvc.perform(get("/users/1")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(SHARER_USER_ID, 1))
+                .andExpect(status().isOk());
     }
 }

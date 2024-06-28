@@ -53,7 +53,7 @@ class ItemRequestControllerTest {
             userNumberOne,
             LocalDateTime.of(2024, 06, 23, 23, 33, 33));
 
-    List<ItemDtoWithoutOwner> items = new ArrayList<>();
+    private List<ItemDtoWithoutOwner> items = new ArrayList<>();
 
     private final ItemRequestDtoWithAnswers itemRequestDtoWithAnswers = new ItemRequestDtoWithAnswers(
             1L,
@@ -83,7 +83,7 @@ class ItemRequestControllerTest {
         when(itemRequestService.findItemRequestsByUserId(anyLong()))
                 .thenReturn(itemsRequestDtoWithAnswers);
 
-        mvc.perform(get("/requests/1")
+        mvc.perform(get("/requests")
                         .content(mapper.writeValueAsString(itemRequestDtoWithAnswers))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -100,7 +100,7 @@ class ItemRequestControllerTest {
         when(itemRequestService.getAllItemRequests(anyLong(), anyInt(), anyInt()))
                 .thenReturn(itemsRequestDtoWithAnswers);
 
-        mvc.perform(get("/requests/1")
+        mvc.perform(get("/requests/all")
                         .content(mapper.writeValueAsString(itemRequestDtoWithAnswers))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)

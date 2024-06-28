@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.booking.dto.BookingReducedDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -23,6 +24,12 @@ class ItemDtoJsonTest {
 
     @Autowired
     private JacksonTester<ItemDtoWithoutOwner> jsonNumberTwo;
+
+    @Autowired
+    private JacksonTester<Comment> jsonNumberThree;
+
+    @Autowired
+    private JacksonTester<CommentDto> jsonNumberFour;
 
     private final User owner = new User(1L, "Linar", "Linar@xakep.ru");
 
@@ -81,5 +88,29 @@ class ItemDtoJsonTest {
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("Алмазная пила Makita");
         assertThat(result).extractingJsonPathStringValue("$.avaliable").isEqualTo(null);
         assertThat(result).extractingJsonPathNumberValue("$.requestId").isEqualTo(1);
+    }
+
+    @Test
+    void toComment() throws IOException {
+        Comment comment = new Comment(1L, "Все норм", item, booker,
+                LocalDateTime.of(2024, 07, 23, 23, 33, 33));
+
+        JsonContent<Comment> result = jsonNumberThree.write(comment);
+
+        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
+        assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("Все норм");
+        assertThat(result).extractingJsonPathStringValue("$.booker").isEqualTo(null);
+    }
+
+    @Test
+    void toCommentDto() throws IOException {
+        CommentDto commentDto = new CommentDto(1L, "Все норм", item, booker.getName(),
+                LocalDateTime.of(2024, 07, 23, 23, 33, 33));
+
+        JsonContent<CommentDto> result = jsonNumberFour.write(commentDto);
+
+        assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
+        assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("Все норм");
+        assertThat(result).extractingJsonPathStringValue("$.booker").isEqualTo(null);
     }
 }

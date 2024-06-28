@@ -23,10 +23,10 @@ class ItemMapperTest {
     private JacksonTester<Item> jsonNumberTwo;
 
     @Autowired
-    private JacksonTester<CommentDto> jsonNumberThree;
+    private JacksonTester<Comment> jsonNumberThree;
 
     @Autowired
-    private JacksonTester<Comment> jsonNumberFour;
+    private JacksonTester<CommentDto> jsonNumberFour;
 
     private final User owner = new User(1L, "Linar", "Linar@xakep.ru");
 
@@ -35,11 +35,11 @@ class ItemMapperTest {
     private final Item item = new Item(1L, "Алмазная пила", "Алмазная пила Makita",
             true, owner, null);
 
-    private final CommentDto commentDto = new CommentDto(1L, "Все норм", item, booker.getName(),
-            LocalDateTime.of(2024, 07, 23, 23, 33, 33));
+    //private final CommentDto commentDto = new CommentDto(1L, "Все норм", item, booker.getName(),
+           // LocalDateTime.of(2024, 07, 23, 23, 33, 33));
 
-    private final Comment comment = new Comment(1L, "Все норм", item, booker,
-            LocalDateTime.of(2024, 07, 23, 23, 33, 33));
+    //private final Comment comment = new Comment(1L, "Все норм", item, booker,
+    //        LocalDateTime.of(2024, 07, 23, 23, 33, 33));
 
     @Test
     void toItemDto() throws IOException {
@@ -63,6 +63,9 @@ class ItemMapperTest {
 
     @Test
     void toItem() throws IOException {
+        Item item = new Item(1L, "Алмазная пила", "Алмазная пила Makita",
+                true, owner, null);
+
         JsonContent<Item> result = jsonNumberTwo.write(item);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
@@ -74,7 +77,10 @@ class ItemMapperTest {
 
     @Test
     void toComment() throws IOException {
-        JsonContent<CommentDto> result = jsonNumberThree.write(commentDto);
+        Comment comment = new Comment(1L, "Все норм", item, booker,
+                LocalDateTime.of(2024, 07, 23, 23, 33, 33));
+
+        JsonContent<Comment> result = jsonNumberThree.write(comment);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("Все норм");
@@ -83,7 +89,10 @@ class ItemMapperTest {
 
     @Test
     void toCommentDto() throws IOException {
-        JsonContent<Comment> result = jsonNumberFour.write(comment);
+        CommentDto commentDto = new CommentDto(1L, "Все норм", item, booker.getName(),
+                LocalDateTime.of(2024, 07, 23, 23, 33, 33));
+
+        JsonContent<CommentDto> result = jsonNumberFour.write(commentDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("Все норм");

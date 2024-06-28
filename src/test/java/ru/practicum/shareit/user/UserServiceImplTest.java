@@ -1,79 +1,101 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@Transactional
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 class UserServiceImplTest {
+    private final UserService userService;
 
-    UserService userService = Mockito.mock(UserService.class);
+    private User owner = new User(null, "Lena", "Lena@yandex.ru");
 
-    private final User owner = new User(15L, "Lena", "Lena@yandex.ru");
-
-    private final User booker = new User(1L, "Lenar", "Lenar@xakep.ru");
+    private User booker = new User(null, "Lenar", "Lenar@xakep.ru");
 
     @Test
     void createUser() {
-        Mockito
-                .when(userService.createUser(any()))
-                .thenReturn(owner);
+        owner = userService.createUser(owner);
 
-        userService.createUser(owner);
-        Mockito.verify(userService, Mockito.times(1))
-                .createUser(owner);
+        Optional<User> user = userService.getUser(owner.getId());
+
+        assertTrue(user.isPresent());
     }
 
     @Test
     void updateUser() {
-        Mockito
-                .when(userService.updateUser(anyInt(), any()))
-                .thenReturn(booker);
+        User userUpd = new User(null, "Tema", "Tema@xakep.ru");
 
-        userService.updateUser(1L, booker);
-        Mockito.verify(userService, Mockito.times(1))
-                .updateUser(1L, booker);
+        owner = userService.createUser(owner);
+        User user = userService.updateUser(owner.getId(), userUpd);
+
+        assertEquals(userUpd.getName(), user.getName());
+        assertEquals(userUpd.getEmail(), user.getEmail());
+    }
+
+    @Test
+    void updateUserWithNull() {
+        User userUpd = new User(null, "Tema", null);
+
+        owner = userService.createUser(owner);
+        User user = userService.updateUser(owner.getId(), userUpd);
+
+        assertEquals(userUpd.getName(), user.getName());
+        assertEquals(owner.getEmail(), user.getEmail());
     }
 
     @Test
     void deleteUser() {
-        Mockito
-                .when(userService.getUser(anyInt()))
-                .thenReturn(null);
+        owner = userService.createUser(owner);
+        booker = userService.createUser(booker);
 
-        userService.deleteUser(1L);
-        Mockito.verify(userService, Mockito.times(1))
-                .deleteUser(1L);
+        Collection<User> users = userService.getAllUsers();
+        userService.deleteUser(owner.getId());
+
+        Collection<User> usersUpdated = userService.getAllUsers();
+
+        assertEquals(users.size() - 1, usersUpdated.size());
     }
 
     @Test
     void getUser() {
-        Mockito
-                .when(userService.getUser(anyInt()))
-                .thenReturn(Optional.of(owner));
+        owner = userService.createUser(owner);
 
-        userService.getUser(1L);
-        Mockito.verify(userService, Mockito.times(1))
-                .getUser(1L);
+        Optional<User> user = userService.getUser(owner.getId());
+
+        assertTrue(user.isPresent());
+    }
+
+    @Test
+    void getUserWithId() {
+
+        UserNotFoundException thrown = assertThrows(
+                UserNotFoundException.class,
+                () -> userService.getUser(77L),
+                "Пользователь с id = [77] не существует"
+        );
+
+        assertTrue(thrown.getMessage().contains("Пользователь с id = [77] не существует"));
     }
 
     @Test
     void getAllUsers() {
-        List<User> users = new ArrayList<>();
-        users.add(owner);
+        owner = userService.createUser(owner);
+        booker = userService.createUser(booker);
 
-        Mockito
-                .when(userService.getAllUsers())
-                .thenReturn(users);
+        Collection<User> users = userService.getAllUsers();
 
-        userService.getAllUsers();
-        Mockito.verify(userService, Mockito.times(1))
-                .getAllUsers();
+        assertEquals(users.size(), users.size());
 
     }
 }
