@@ -7,8 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.exception.ItemRequestNotFoundException;
-import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithBooking;
@@ -24,8 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -150,9 +146,9 @@ class ItemControllerTest {
                         .header(SHARER_USER_ID, 1))
                 .andExpect(status().isOk());
     }
+
     @Test
     void createComment() throws Exception {
-
         when(itemService.addNewComment(anyLong(), anyLong(), any()))
                 .thenReturn(comment);
 
@@ -164,8 +160,6 @@ class ItemControllerTest {
                         .header(SHARER_USER_ID, 1))
                 .andExpect(status().isNotFound());
     }
-
-
 
     @Test
     void findItem() throws Exception {
