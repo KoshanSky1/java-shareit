@@ -21,7 +21,7 @@ import static ru.practicum.shareit.item.dto.ItemMapper.toItemDtoWithBooking;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ItemServiceImplDataBaseTest {
+public class ItemServiceImplDataBaseTest {
     private final UserServiceImpl userService;
 
     private final ItemServiceImpl itemService;
@@ -40,7 +40,7 @@ class ItemServiceImplDataBaseTest {
             true, userNumberOne, null);
 
     @Test
-    void getItems() {
+    public void getItems() {
         User userNumberOneSaved = userService.createUser(userNumberOne);
         User userNumberTwoSaved = userService.createUser(userNumberTwo);
 
@@ -58,6 +58,5 @@ class ItemServiceImplDataBaseTest {
         List<ItemDtoWithBooking> itemsActual = itemService.getItems(userNumberOneSaved.getId(), 0, 20);
 
         assertEquals(itemsExpected, itemsActual);
-
     }
 }

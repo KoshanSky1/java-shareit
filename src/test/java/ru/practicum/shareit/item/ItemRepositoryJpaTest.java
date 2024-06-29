@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ItemRepositoryJpaTest {
+public class ItemRepositoryJpaTest {
 
     @Autowired
     private TestEntityManager em;
@@ -30,7 +30,7 @@ class ItemRepositoryJpaTest {
     private UserRepository userRepository;
 
     @Test
-    void search() {
+    public void search() {
         User user = new User(1L, "Linar", "Linar@xakep.ru");
 
         user = userRepository.save(user);
@@ -46,6 +46,5 @@ class ItemRepositoryJpaTest {
         List<Item> actualItems = repository.search("МуЛьТи");
 
         assertEquals(expectedItems, actualItems);
-
     }
 }

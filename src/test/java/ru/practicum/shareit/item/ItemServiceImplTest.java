@@ -33,7 +33,7 @@ import static ru.practicum.shareit.item.dto.ItemMapper.toItem;
 @SpringBootTest
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ItemServiceImplTest {
+public class ItemServiceImplTest {
     private final UserService userService;
     private final ItemService itemService;
     private final ItemRequestService requestService;
@@ -54,7 +54,7 @@ class ItemServiceImplTest {
     private final Item itemWithRequest = new Item(null, "Мультипекарь", "Мультипекарь Redmond со сменными панелями",
             true, owner, request);
 
-    private Item itemUpdated = new Item(null, "Алмазная пила", "Алмазная пила",
+    private final Item itemUpdated = new Item(null, "Алмазная пила", "Алмазная пила",
             false, owner, null);
 
     private final ItemDtoWithBooking itemDtoWithBooking = new ItemDtoWithBooking(1L, "Мультипекарь",
@@ -63,7 +63,7 @@ class ItemServiceImplTest {
 
     private User booker = new User(null, "Lenach", "Lenach@xakep.ru");
 
-    private Booking bookingNumberOne = new Booking(null,
+    private final Booking bookingNumberOne = new Booking(null,
             LocalDateTime.of(2024, 05, 23, 23, 33, 33),
             LocalDateTime.of(2024, 06, 28, 23, 33, 33),
             itemWithoutRequest, booker, BookingStatus.WAITING);
@@ -83,7 +83,7 @@ class ItemServiceImplTest {
             LocalDateTime.now().minusDays(28));
 
     @Test
-    void addNewItemWithoutRequest() {
+    public void addNewItemWithoutRequest() {
         owner = userService.createUser(owner);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
 
@@ -93,7 +93,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addNewItemWithoutRequestAndNull() {
+    public void addNewItemWithoutRequestAndNull() {
         owner = userService.createUser(owner);
         requestor = userService.createUser(requestor);
         request = requestService.addNewItemRequest(requestor.getId(), requestDto);
@@ -109,7 +109,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addNewItemWithRequest() {
+    public void addNewItemWithRequest() {
         owner = userService.createUser(owner);
         requestor = userService.createUser(requestor);
         request = requestService.addNewItemRequest(requestor.getId(), requestDto);
@@ -125,7 +125,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void editItem() {
+    public void editItem() {
         owner = userService.createUser(owner);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
         Item savedItem = itemService.editItem(owner.getId(), itemDto.getId(), itemUpdated);
@@ -135,7 +135,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void editItemWithUser() {
+    public void editItemWithUser() {
         booker = userService.createUser(booker);
         owner = userService.createUser(owner);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -147,11 +147,11 @@ class ItemServiceImplTest {
                 "Пользователи не совпадают"
         );
         System.out.println(thrown.getMessage());
-        assertTrue(thrown.getMessage().equals("Пользователи не совпадают"));
+        assertEquals("Пользователи не совпадают", thrown.getMessage());
     }
 
     @Test
-    void getItems() {
+    public void getItems() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -172,11 +172,10 @@ class ItemServiceImplTest {
         List<ItemDtoWithBooking> itemsActual = itemService.getItems(owner.getId(), 0, 10);
 
         assertEquals(items.size(), itemsActual.size());
-
     }
 
     @Test
-    void getItemsWithLastBooking() {
+    public void getItemsWithLastBooking() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -192,11 +191,10 @@ class ItemServiceImplTest {
         List<ItemDtoWithBooking> itemsActual = itemService.getItems(owner.getId(), 0, 10);
 
         assertEquals(items.size(), itemsActual.size());
-
     }
 
     @Test
-    void getItemsWithSize() {
+    public void getItemsWithSize() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -210,12 +208,11 @@ class ItemServiceImplTest {
         List<ItemDtoWithBooking> itemsActual = itemService.getItems(owner.getId(), 7, 10);
 
         assertTrue(itemsActual.isEmpty());
-
     }
 
 
     @Test
-    void getItemWithBooking() {
+    public void getItemWithBooking() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -233,8 +230,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItemWithLastBooking() {
-
+    public void getItemWithLastBooking() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -253,7 +249,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void searchItems() {
+    public void searchItems() {
         String text = "мульти";
         owner = userService.createUser(owner);
         User user = userService.createUser(requestor);
@@ -269,7 +265,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void searchItemsWithSize() {
+    public void searchItemsWithSize() {
         String text = "мульти";
         owner = userService.createUser(owner);
         User user = userService.createUser(requestor);
@@ -283,7 +279,7 @@ class ItemServiceImplTest {
 
 
     @Test
-    void searchItemsWithEmptyText() {
+    public void searchItemsWithEmptyText() {
         String text = "";
         owner = userService.createUser(owner);
         User user = userService.createUser(requestor);
@@ -298,7 +294,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItem() {
+    public void getItem() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -311,7 +307,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItemWithId() {
+    public void getItemWithId() {
 
         ItemNotFoundException thrown = assertThrows(
                 ItemNotFoundException.class,
@@ -319,11 +315,11 @@ class ItemServiceImplTest {
                 "Вещь с id = [77] не существует"
         );
         System.out.println(thrown.getMessage());
-        assertTrue(thrown.getMessage().equals("Вещь с id  = [77] не существует"));
+        assertEquals("Вещь с id  = [77] не существует", thrown.getMessage());
     }
 
     @Test
-    void getItemWithBookings() {
+    public void getItemWithBookings() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -342,7 +338,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItemWithBookingsByBooker() {
+    public void getItemWithBookingsByBooker() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -361,7 +357,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void getItemWithoutBookings() {
+    public void getItemWithoutBookings() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -373,7 +369,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addNewComment() {
+    public void addNewComment() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -386,7 +382,7 @@ class ItemServiceImplTest {
     }
 
     @Test
-    void addNewCommentWithEmptyText() {
+    public void addNewCommentWithEmptyText() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
@@ -400,7 +396,7 @@ class ItemServiceImplTest {
                 "Бронирование еще не завершено."
         );
 
-        assertTrue(thrown.getMessage().equals("Бронирование еще не завершено."));
+        assertEquals("Бронирование еще не завершено.", thrown.getMessage());
     }
 
 

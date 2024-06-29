@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class BookingReducedDtoTest {
+public class BookingReducedDtoTest {
     @Autowired
     private JacksonTester<BookingReducedDto> json;
 
     private final User booker = new User(1L, "Lenar", "Lenar@xakep.ru");
 
     @Test
-    void toBookingReducedDto() throws IOException {
+    public void toBookingReducedDto() throws IOException {
         BookingReducedDto bookingReducedDto = new BookingReducedDto(
                 1L,
                 booker.getId(),

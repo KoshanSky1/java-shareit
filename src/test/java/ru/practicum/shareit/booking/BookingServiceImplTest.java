@@ -27,7 +27,7 @@ import static ru.practicum.shareit.booking.BookingState.*;
 @SpringBootTest
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class BookingServiceImplTest {
+public class BookingServiceImplTest {
     private final BookingService bookingService;
     private final UserService userService;
     private final ItemService itemService;
@@ -53,8 +53,7 @@ class BookingServiceImplTest {
             LocalDateTime.now().plusMonths(3), item, booker, BookingStatus.WAITING);
 
     @Test
-    void createBooking() {
-
+    public void createBooking() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -66,8 +65,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void createBookingWithDate() {
-
+    public void createBookingWithDate() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -87,7 +85,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void confirmOrRejectBooking() {
+    public void confirmOrRejectBooking() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -101,7 +99,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void confirmOrRejectBookingWithFalse() {
+    public void confirmOrRejectBookingWithFalse() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -115,7 +113,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void confirmOrRejectBookingByBooker() {
+    public void confirmOrRejectBookingByBooker() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -130,7 +128,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void confirmOrRejectBookingWithOwner() {
+    public void confirmOrRejectBookingWithOwner() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -148,7 +146,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void confirmOrRejectLastBooking() {
+    public void confirmOrRejectLastBooking() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -167,7 +165,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void confirmOrRejectBookingWithApprowed() {
+    public void confirmOrRejectBookingWithApprowed() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -184,8 +182,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getBookingById() {
-
+    public void getBookingById() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -197,8 +194,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCaseAll() {
-
+    public void getAllBookingsByUserIdWithCaseAll() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -217,8 +213,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCaseCurrent() {
-
+    public void getAllBookingsByUserIdWithCaseCurrent() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -234,8 +229,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCasePast() {
-
+    public void getAllBookingsByUserIdWithCasePast() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -251,8 +245,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCaseFuture() {
-
+    public void getAllBookingsByUserIdWithCaseFuture() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -271,8 +264,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCaseNegative() {
-
+    public void getAllBookingsByUserIdWithCaseNegative() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -292,8 +284,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCaseWaiting() {
-
+    public void getAllBookingsByUserIdWithCaseWaiting() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -312,8 +303,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCaseRejected() {
-
+    public void getAllBookingsByUserIdWithCaseRejected() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -329,8 +319,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsByUserIdWithCaseNull() {
-
+    public void getAllBookingsByUserIdWithCaseNull() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -345,8 +334,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCaseAll() {
-
+    public void getAllBookingsForAllUserThingsWithCaseAll() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -364,8 +352,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCaseCurrent() {
-
+    public void getAllBookingsForAllUserThingsWithCaseCurrent() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -380,8 +367,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCasePast() {
-
+    public void getAllBookingsForAllUserThingsWithCasePast() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -396,8 +382,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCaseFuture() {
-
+    public void getAllBookingsForAllUserThingsWithCaseFuture() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -415,8 +400,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCaseNegative() {
-
+    public void getAllBookingsForAllUserThingsWithCaseNegative() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -436,8 +420,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCaseWaiting() {
-
+    public void getAllBookingsForAllUserThingsWithCaseWaiting() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -455,8 +438,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCaseRejected() {
-
+    public void getAllBookingsForAllUserThingsWithCaseRejected() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -471,8 +453,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThingsWithCaseNull() {
-
+    public void getAllBookingsForAllUserThingsWithCaseNull() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -490,8 +471,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void testGetBookingById() {
-
+    public void testGetBookingById() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
         ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), item);
@@ -503,7 +483,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void testGetBookingByIdWithId() {
+    public void testGetBookingByIdWithId() {
         owner = userService.createUser(owner);
 
         ItemNotFoundException thrown = assertThrows(
@@ -516,7 +496,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void findByStateTest() {
+    public void findByStateTest() {
         String name = "FINALLY";
 
         BookingStateNotFoundException thrown = assertThrows(
@@ -529,7 +509,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void checkUserIngress() {
+    public void checkUserIngress() {
         User user = userService.createUser(new User(null, "Robert", "ggg@ggg.ru"));
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);

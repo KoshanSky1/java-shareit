@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class UserServiceImplDataBaseTest {
+public class UserServiceImplDataBaseTest {
 
     private final UserServiceImpl userService;
 
@@ -25,13 +25,13 @@ class UserServiceImplDataBaseTest {
     private final User booker = new User(null, "Nick", "Nicki@rambler.ru");
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         userService.createUser(owner);
         userService.createUser(booker);
     }
 
     @Test
-    void getAllUsers() {
+    public void getAllUsers() {
         Collection<User> usersExpected = new ArrayList<>();
         usersExpected.add(owner);
         usersExpected.add(booker);

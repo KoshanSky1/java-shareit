@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class UserServiceImplTest {
+public class UserServiceImplTest {
     private final UserService userService;
 
     private User owner = new User(null, "Lena", "Lena@yandex.ru");
@@ -24,7 +24,7 @@ class UserServiceImplTest {
     private User booker = new User(null, "Lenar", "Lenar@xakep.ru");
 
     @Test
-    void createUser() {
+    public void createUser() {
         owner = userService.createUser(owner);
 
         Optional<User> user = userService.getUser(owner.getId());
@@ -33,7 +33,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateUser() {
+    public void updateUser() {
         User userUpd = new User(null, "Tema", "Tema@xakep.ru");
 
         owner = userService.createUser(owner);
@@ -44,7 +44,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateUserWithNull() {
+    public void updateUserWithNull() {
         User userUpd = new User(null, "Tema", null);
 
         owner = userService.createUser(owner);
@@ -55,7 +55,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void deleteUser() {
+    public void deleteUser() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
 
@@ -68,7 +68,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUser() {
+    public void getUser() {
         owner = userService.createUser(owner);
 
         Optional<User> user = userService.getUser(owner.getId());
@@ -77,7 +77,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUserWithId() {
+    public void getUserWithId() {
 
         UserNotFoundException thrown = assertThrows(
                 UserNotFoundException.class,
@@ -89,7 +89,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getAllUsers() {
+    public void getAllUsers() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
 

@@ -28,18 +28,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ItemController.class)
-class ItemControllerTest {
+public class ItemControllerTest {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    ItemMapper itemMapper;
+    private ItemMapper itemMapper;
 
     @MockBean
-    ItemService itemService;
+    private ItemService itemService;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;
@@ -67,7 +67,7 @@ class ItemControllerTest {
             null, null);
 
     @Test
-    void createItemWithoutRequest() throws Exception {
+    public void createItemWithoutRequest() throws Exception {
         when(itemService.addNewItemWithoutRequest(anyLong(), any()))
                 .thenReturn(itemDto);
 
@@ -81,7 +81,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void createItemWithRequest() throws Exception {
+    public void createItemWithRequest() throws Exception {
         when(itemService.addNewItemWithRequest(anyLong(), any(), anyLong()))
                 .thenReturn(itemDto);
 
@@ -95,7 +95,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void updateItem() throws Exception {
+    public void updateItem() throws Exception {
         when(itemService.editItem(anyLong(), anyLong(), any()))
                 .thenReturn(item);
 
@@ -109,7 +109,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void findItemsByUser() throws Exception {
+    public void findItemsByUser() throws Exception {
         List<CommentDto> commentsDto = new ArrayList<>();
         commentsDto.add(commentDto);
 
@@ -131,7 +131,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void searchItems() throws Exception {
+    public void searchItems() throws Exception {
         List<Item> items = new ArrayList<>();
         items.add(null);
 
@@ -148,7 +148,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void createComment() throws Exception {
+    public void createComment() throws Exception {
         when(itemService.addNewComment(anyLong(), anyLong(), any()))
                 .thenReturn(comment);
 
@@ -162,7 +162,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void findItem() throws Exception {
+    public void findItem() throws Exception {
         when(itemService.getItem(anyLong()))
                 .thenReturn(Optional.of(item));
 

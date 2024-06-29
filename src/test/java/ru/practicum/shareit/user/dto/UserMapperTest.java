@@ -12,7 +12,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class UserMapperTest {
+public class UserMapperTest {
     @Autowired
     private JacksonTester<UserDto> jsonNumberOne;
 
@@ -20,7 +20,7 @@ class UserMapperTest {
     private JacksonTester<User> jsonNumberTwo;
 
     @Test
-    void toUserDto() throws IOException {
+    public void toUserDto() throws IOException {
         UserDto userDto = new UserDto(
                 1L,
                 "Linar",
@@ -35,7 +35,7 @@ class UserMapperTest {
     }
 
     @Test
-    void toUser() throws IOException {
+    public void toUser() throws IOException {
         User user = new User(
                 1L,
                 "Linar",
@@ -47,6 +47,5 @@ class UserMapperTest {
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("Linar");
         assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("Linar@xakep.ru");
-
     }
 }

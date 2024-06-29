@@ -21,16 +21,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = UserController.class)
-class UserControllerTest {
-
+public class UserControllerTest {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;
@@ -39,9 +38,8 @@ class UserControllerTest {
 
     private final User userNumberOne = new User(null, "Linar", "Linar@xakep.ru");
 
-
     @Test
-    void createUser() throws Exception {
+    public void createUser() throws Exception {
         when(userService.createUser(any()))
                 .thenReturn(userNumberOne);
 
@@ -55,7 +53,7 @@ class UserControllerTest {
     }
 
     @Test
-    void updateUser() throws Exception {
+    public void updateUser() throws Exception {
         when(userService.updateUser(anyLong(), any()))
                 .thenReturn(userNumberOne);
 
@@ -69,7 +67,7 @@ class UserControllerTest {
     }
 
     @Test
-    void findAllUsers() throws Exception {
+    public void findAllUsers() throws Exception {
         List<User> users = new ArrayList<>();
         users.add(userNumberOne);
 
@@ -83,12 +81,10 @@ class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .header(SHARER_USER_ID, 1))
                 .andExpect(status().isOk());
-
     }
 
     @Test
-    void deleteUser() throws Exception {
-
+    public void deleteUser() throws Exception {
         mvc.perform(delete("/users/1")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +94,7 @@ class UserControllerTest {
     }
 
     @Test
-    void findUser() throws Exception {
+    public void findUser() throws Exception {
         when(userService.getUser(anyLong()))
                 .thenReturn(Optional.of(userNumberOne));
 

@@ -16,12 +16,12 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class ItemRequestMapperTest {
+public class ItemRequestMapperTest {
     @Autowired
     private JacksonTester<ItemRequestDtoWithAnswers> json;
 
     @Test
-    void testItemRequestDtoWithAnswers() throws Exception {
+    public void testItemRequestDtoWithAnswers() throws Exception {
 
         User owner = new User(1L, "Linar", "Linar@xakep.ru");
 

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ItemRepositoryTest {
+public class ItemRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
@@ -26,7 +26,7 @@ class ItemRepositoryTest {
     private ItemRepository repository;
 
     @Test
-    void findAllByOwnerId() {
+    public void findAllByOwnerId() {
         User user = new User(12L, "Max", "Max@mail.ru");
 
         Item item = new Item(null, "Мультипекарь", "Мультипекарь Redmond со сменными панелями",
@@ -41,7 +41,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findAllByRequestIn() {
+    public void findAllByRequestIn() {
         User user = new User(12L, "Max", "Max@mail.ru");
 
         Item item = new Item(null, "Мультипекарь", "Мультипекарь Redmond со сменными панелями",
@@ -57,7 +57,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findAllByRequestId() {
+    public void findAllByRequestId() {
         User user = new User(12L, "Max", "Max@mail.ru");
 
         Item item = new Item(null, "Мультипекарь", "Мультипекарь Redmond со сменными панелями",

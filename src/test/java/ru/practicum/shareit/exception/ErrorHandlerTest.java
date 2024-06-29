@@ -18,13 +18,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ErrorHandler.class)
-class ErrorHandlerTest {
+public class ErrorHandlerTest {
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    ErrorHandler errorHandler;
+    private ErrorHandler errorHandler;
 
     @Autowired
     private MockMvc mvc;
@@ -42,7 +42,7 @@ class ErrorHandlerTest {
     private final ErrorResponse errorResponseNumberFive = new ErrorResponse("Вещь не прошла валидацию");
 
     @Test
-    void handleUserNotFoundException() throws Exception {
+    public void handleUserNotFoundException() throws Exception {
         when(errorHandler.handleUserNotFoundException(any()))
                 .thenReturn(errorResponseNumberOne);
 
@@ -56,7 +56,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    void handleItemNotFoundException() throws Exception {
+    public void handleItemNotFoundException() throws Exception {
         when(errorHandler.handleUserNotFoundException(any()))
                 .thenReturn(errorResponseNumberTwo);
 
@@ -71,7 +71,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    void handleItemRequestNotFoundException() throws Exception {
+    public void handleItemRequestNotFoundException() throws Exception {
         when(errorHandler.handleUserNotFoundException(any()))
                 .thenReturn(errorResponseNumberThree);
 
@@ -86,7 +86,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    void handleBookingStateNotFoundException() throws Exception {
+    public void handleBookingStateNotFoundException() throws Exception {
         when(errorHandler.handleUserNotFoundException(any()))
                 .thenReturn(errorResponseNumberFour);
 
@@ -101,7 +101,7 @@ class ErrorHandlerTest {
     }
 
     @Test
-    void handleItemValidationException() throws Exception {
+    public void handleItemValidationException() throws Exception {
         when(errorHandler.handleUserNotFoundException(any()))
                 .thenReturn(errorResponseNumberFive);
 

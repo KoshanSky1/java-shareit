@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestPropertySource(properties = {"db.name=test"})
-class BookingServiceImplDataBaseTest {
+public class BookingServiceImplDataBaseTest {
     private final UserServiceImpl userService;
 
     private final ItemServiceImpl itemService;
@@ -44,7 +44,7 @@ class BookingServiceImplDataBaseTest {
             LocalDateTime.now().plusMonths(6), item, booker, BookingStatus.WAITING);
 
     @Test
-    void getAllBookingsByUserId() {
+    public void getAllBookingsByUserId() {
         userService.createUser(owner);
         userService.createUser(booker);
 

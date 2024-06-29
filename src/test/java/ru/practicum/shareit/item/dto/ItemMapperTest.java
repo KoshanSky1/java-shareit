@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class ItemMapperTest {
+public class ItemMapperTest {
     @Autowired
     private JacksonTester<ItemDto> jsonNumberOne;
 
@@ -35,14 +35,8 @@ class ItemMapperTest {
     private final Item item = new Item(1L, "Алмазная пила", "Алмазная пила Makita",
             true, owner, null);
 
-    //private final CommentDto commentDto = new CommentDto(1L, "Все норм", item, booker.getName(),
-           // LocalDateTime.of(2024, 07, 23, 23, 33, 33));
-
-    //private final Comment comment = new Comment(1L, "Все норм", item, booker,
-    //        LocalDateTime.of(2024, 07, 23, 23, 33, 33));
-
     @Test
-    void toItemDto() throws IOException {
+    public void toItemDto() throws IOException {
         ItemDto itemDto = new ItemDto(
                 2L,
                 item.getName(),
@@ -62,7 +56,7 @@ class ItemMapperTest {
     }
 
     @Test
-    void toItem() throws IOException {
+    public void toItem() throws IOException {
         Item item = new Item(1L, "Алмазная пила", "Алмазная пила Makita",
                 true, owner, null);
 
@@ -76,7 +70,7 @@ class ItemMapperTest {
     }
 
     @Test
-    void toComment() throws IOException {
+    public void toComment() throws IOException {
         Comment comment = new Comment(1L, "Все норм", item, booker,
                 LocalDateTime.of(2024, 07, 23, 23, 33, 33));
 
@@ -88,7 +82,7 @@ class ItemMapperTest {
     }
 
     @Test
-    void toCommentDto() throws IOException {
+    public void toCommentDto() throws IOException {
         CommentDto commentDto = new CommentDto(1L, "Все норм", item, booker.getName(),
                 LocalDateTime.of(2024, 07, 23, 23, 33, 33));
 

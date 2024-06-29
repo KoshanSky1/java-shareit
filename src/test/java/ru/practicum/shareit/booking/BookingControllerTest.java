@@ -26,16 +26,16 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 @WebMvcTest(controllers = BookingController.class)
-class BookingControllerTest {
+public class BookingControllerTest {
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    BookingMapper bookingMapper;
+    private BookingMapper bookingMapper;
 
     @MockBean
-    BookingService bookingService;
+    private BookingService bookingService;
 
     @Autowired
     private MockMvc mvc;
@@ -63,7 +63,7 @@ class BookingControllerTest {
             BookingStatus.WAITING);
 
     @Test
-    void createBooking() throws Exception {
+    public void createBooking() throws Exception {
         when(bookingService.createBooking(anyLong(), any()))
                 .thenReturn(booking);
 
@@ -81,7 +81,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void confirmBooking() throws Exception {
+    public void confirmBooking() throws Exception {
         when(bookingService.confirmOrRejectBooking(anyLong(), anyInt(), anyBoolean()))
                 .thenReturn(booking);
 
@@ -96,7 +96,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void getAllBookingsByUser() throws Exception {
+    public void getAllBookingsByUser() throws Exception {
         List<Booking> bookings = new ArrayList<>();
         when(bookingService.getAllBookingsByUserId(anyLong(), any(), anyInt(), anyInt()))
                 .thenReturn(bookings);
@@ -112,7 +112,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void getAllBookingsForAllUserThings() throws Exception {
+    public void getAllBookingsForAllUserThings() throws Exception {
         List<Booking> bookings = new ArrayList<>();
         when(bookingService.getAllBookingsForAllUserThings(anyLong(), any(), anyInt(), anyInt()))
                 .thenReturn(bookings);
@@ -128,7 +128,7 @@ class BookingControllerTest {
     }
 
     @Test
-    void getBookingInformation() throws Exception {
+    public void getBookingInformation() throws Exception {
         when(bookingService.getBookingById(anyLong(), anyLong()))
                 .thenReturn(Optional.of(booking));
 

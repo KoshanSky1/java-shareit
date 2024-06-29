@@ -20,7 +20,7 @@ public class BookingDtoTest {
     private final User booker = new User(1L, "Lenar", "Lenar@xakep.ru");
 
     @Test
-    void toBookingDto() throws IOException {
+    public void toBookingDto() throws IOException {
         BookingDto bookingDto = new BookingDto(
                 1L,
                 1L,

@@ -19,7 +19,7 @@ import static ru.practicum.shareit.booking.BookingStatus.APPROVED;
 import static ru.practicum.shareit.booking.BookingStatus.WAITING;
 
 @DataJpaTest
-class BookingRepositoryTest {
+public class BookingRepositoryTest {
     @Autowired
     private TestEntityManager em;
 
@@ -48,7 +48,7 @@ class BookingRepositoryTest {
             LocalDateTime.now().plusMonths(5), item, booker, WAITING);
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         userRepository.save(owner);
         userRepository.save(booker);
         itemRepository.save(item);
@@ -58,8 +58,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwner_Id() {
-
+    public void findByOwner_Id() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberOne);
         expectedBookings.add(bookingNumberTwo);
@@ -71,7 +70,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwner_IdAndStartIsBeforeAndEndIsAfter() {
+    public void findByOwner_IdAndStartIsBeforeAndEndIsAfter() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberOne);
 
@@ -82,7 +81,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwner_IdAndEndIsBefore() {
+    public void findByOwner_IdAndEndIsBefore() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberTwo);
 
@@ -93,7 +92,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findBOwner_IdAndStartIsAfter() {
+    public void findBOwner_IdAndStartIsAfter() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberThree);
 
@@ -104,7 +103,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwner_IdAndStatusWaiting() {
+    public void findByOwner_IdAndStatusWaiting() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberOne);
         expectedBookings.add(bookingNumberTwo);
@@ -116,7 +115,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwner_IdAndStatusApproved() {
+    public void findByOwner_IdAndStatusApproved() {
         bookingNumberOne.setStatus(BookingStatus.APPROVED);
 
         List<Booking> expectedBookings = new ArrayList<>();
@@ -128,7 +127,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwner_IdAndStatusCanceled() {
+    public void findByOwner_IdAndStatusCanceled() {
         bookingNumberThree.setStatus(BookingStatus.CANCELED);
 
         List<Booking> expectedBookings = new ArrayList<>();
@@ -140,7 +139,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByOwner_IdAndStatusRejected() {
+    public void findByOwner_IdAndStatusRejected() {
         bookingNumberTwo.setStatus(BookingStatus.REJECTED);
 
         List<Booking> expectedBookings = new ArrayList<>();
@@ -152,7 +151,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBooker_Id() {
+    public void findByBooker_Id() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberOne);
         expectedBookings.add(bookingNumberTwo);
@@ -164,7 +163,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBooker_IdAndStartIsBeforeAndEndIsAfter() {
+    public void findByBooker_IdAndStartIsBeforeAndEndIsAfter() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberOne);
         expectedBookings.remove(bookingNumberOne);
@@ -176,7 +175,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBooker_IdAndEndIsBefore() {
+    public void findByBooker_IdAndEndIsBefore() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberTwo);
 
@@ -187,7 +186,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBooker_IdAndStartIsAfter() {
+    public void findByBooker_IdAndStartIsAfter() {
         List<Booking> expectedBookings = new ArrayList<>();
         expectedBookings.add(bookingNumberThree);
 
@@ -198,7 +197,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findByBooker_IdAndStatus() {
+    public void findByBooker_IdAndStatus() {
         List<Booking> expectedBookings = new ArrayList<>();
 
         List<Booking> actualBookings = repository.findByBooker_IdAndStatus(booker.getId(),
@@ -208,7 +207,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findAllByItemIn() {
+    public void findAllByItemIn() {
         List<Item> items = new ArrayList<>();
         items.add(item);
 
@@ -223,19 +222,19 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc() {
+    public void findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc() {
 
         Booking booking = repository.findFirstByItem_IdAndStartBeforeAndStatusOrderByEndDesc(1L,
                 LocalDateTime.now(), APPROVED);
 
-        assertEquals(null, booking);
+        assertNull(booking);
     }
 
     @Test
-    void findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc() {
+    public void findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc() {
         Booking booking = repository.findFirstByItem_IdAndStartAfterAndStatusOrderByStartAsc(1L,
                 LocalDateTime.now(), APPROVED);
 
-        assertEquals(null, booking);
+        assertNull(booking);
     }
 }

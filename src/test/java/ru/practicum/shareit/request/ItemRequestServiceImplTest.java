@@ -26,8 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ItemRequestServiceImplTest {
-
+public class ItemRequestServiceImplTest {
     private final ItemRequestService itemRequestService;
     private final UserService userService;
     private final ItemService itemService;
@@ -47,7 +46,7 @@ class ItemRequestServiceImplTest {
     private final ItemRequestDto requestDtoNumberTwo = new ItemRequestDto(null,
             "Нужна алмазная пила", user, LocalDateTime.now());
 
-    List<ItemDtoWithoutOwner> items = new ArrayList<>();
+    private List<ItemDtoWithoutOwner> items = new ArrayList<>();
 
     private final ItemRequestDtoWithAnswers itemRequestDtoWithAnswers = new ItemRequestDtoWithAnswers(
             2L,
@@ -68,7 +67,7 @@ class ItemRequestServiceImplTest {
             true, owner, null);
 
     @Test
-    void addNewItemRequest() {
+    public void addNewItemRequest() {
         user = userService.createUser(user);
         requestor = userService.createUser(requestor);
         request = itemRequestService.addNewItemRequest(requestor.getId(), requestDto);
@@ -79,7 +78,7 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    void addNewItemRequestWithEmptyDescription() {
+    public void addNewItemRequestWithEmptyDescription() {
         user = userService.createUser(user);
         requestor = userService.createUser(requestor);
 
@@ -96,7 +95,7 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    void getAllItemRequests() {
+    public void getAllItemRequests() {
         owner = userService.createUser(owner);
         user = userService.createUser(user);
         requestor = userService.createUser(requestor);
@@ -112,7 +111,7 @@ class ItemRequestServiceImplTest {
         assertEquals(requests.size(), requestsActual.size());
     }
 
-    void getAllItemRequestsByRequestorId() {
+    public void getAllItemRequestsByRequestorId() {
         owner = userService.createUser(owner);
         user = userService.createUser(user);
         requestor = userService.createUser(requestor);
@@ -129,7 +128,7 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    void getAllItemRequestsWithSize() {
+    public void getAllItemRequestsWithSize() {
         owner = userService.createUser(owner);
         user = userService.createUser(user);
         requestor = userService.createUser(requestor);
@@ -142,11 +141,10 @@ class ItemRequestServiceImplTest {
         );
 
         assertTrue(thrown.getMessage().contains("Индекс первого элемента не может быть отрицательным"));
-
     }
 
     @Test
-    void getItemRequestById() {
+    public void getItemRequestById() {
         owner = userService.createUser(owner);
         user = userService.createUser(user);
         requestor = userService.createUser(requestor);
@@ -158,10 +156,9 @@ class ItemRequestServiceImplTest {
         assertEquals(requestSaved.getDescription(), requestDtoNumberTwo.getDescription());
     }
 
-
     @Test
     @Transactional
-    void findItemRequestsByUserId() {
+    public void findItemRequestsByUserId() {
         owner = userService.createUser(owner);
         user = userService.createUser(user);
         requestor = userService.createUser(requestor);
@@ -177,7 +174,7 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    void findItemRequestById() {
+    public void findItemRequestById() {
         owner = userService.createUser(owner);
         requestor = userService.createUser(requestor);
         request = itemRequestService.addNewItemRequest(requestor.getId(), requestDtoNumberTwo);
@@ -189,7 +186,7 @@ class ItemRequestServiceImplTest {
     }
 
     @Test
-    void findItemRequestWithId() {
+    public void findItemRequestWithId() {
         ItemRequestNotFoundException thrown = assertThrows(
                 ItemRequestNotFoundException.class,
                 () -> itemRequestService.findItemRequestById(777),

@@ -18,7 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class ItemDtoJsonTest {
+public class ItemDtoJsonTest {
     @Autowired
     private JacksonTester<ItemDtoWithBooking> jsonNumberOne;
 
@@ -47,7 +47,7 @@ class ItemDtoJsonTest {
     private final CommentDto comment = new CommentDto(1L, "Все норм", item, booker.getName(), LocalDateTime.now().minusDays(28));
 
     @Test
-    void toItemDtoWithBooking() throws IOException {
+    public void toItemDtoWithBooking() throws IOException {
         List<CommentDto> comments = new ArrayList<>();
         comments.add(comment);
 
@@ -72,7 +72,7 @@ class ItemDtoJsonTest {
     }
 
     @Test
-    void toItemDtoWithoutOwner() throws IOException {
+    public void toItemDtoWithoutOwner() throws IOException {
         ItemDtoWithoutOwner itemDtoWithoutOwner = new ItemDtoWithoutOwner(
                 1L,
                 item.getName(),
@@ -91,7 +91,7 @@ class ItemDtoJsonTest {
     }
 
     @Test
-    void toComment() throws IOException {
+    public void toComment() throws IOException {
         Comment comment = new Comment(1L, "Все норм", item, booker,
                 LocalDateTime.of(2024, 07, 23, 23, 33, 33));
 
@@ -103,7 +103,7 @@ class ItemDtoJsonTest {
     }
 
     @Test
-    void toCommentDto() throws IOException {
+    public void toCommentDto() throws IOException {
         CommentDto commentDto = new CommentDto(1L, "Все норм", item, booker.getName(),
                 LocalDateTime.of(2024, 07, 23, 23, 33, 33));
 

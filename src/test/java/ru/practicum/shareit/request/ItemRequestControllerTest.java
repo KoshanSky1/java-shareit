@@ -25,15 +25,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ItemRequestController.class)
-class ItemRequestControllerTest {
+public class ItemRequestControllerTest {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    ItemRequestMapper itemRequestMapper;
+    private ItemRequestMapper itemRequestMapper;
 
     @MockBean
-    ItemRequestService itemRequestService;
+    private ItemRequestService itemRequestService;
 
     @Autowired
     private MockMvc mvc;
@@ -62,7 +62,7 @@ class ItemRequestControllerTest {
             items);
 
     @Test
-    void createItemRequest() throws Exception {
+    public void createItemRequest() throws Exception {
         when(itemRequestService.addNewItemRequest(anyLong(), any()))
                 .thenReturn(itemRequest);
 
@@ -76,7 +76,7 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void findItemRequestsByUserId() throws Exception {
+    public void findItemRequestsByUserId() throws Exception {
         List<ItemRequestDtoWithAnswers> itemsRequestDtoWithAnswers = new ArrayList<>();
         itemsRequestDtoWithAnswers.add(itemRequestDtoWithAnswers);
 
@@ -93,7 +93,7 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void findAllItemRequests() throws Exception {
+    public void findAllItemRequests() throws Exception {
         List<ItemRequestDtoWithAnswers> itemsRequestDtoWithAnswers = new ArrayList<>();
         itemsRequestDtoWithAnswers.add(itemRequestDtoWithAnswers);
 
@@ -110,7 +110,7 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void findItemRequestById() throws Exception {
+    public void findItemRequestById() throws Exception {
         when(itemRequestService.getItemRequestById(anyLong(), anyInt()))
                 .thenReturn(itemRequestDtoWithAnswers);
 

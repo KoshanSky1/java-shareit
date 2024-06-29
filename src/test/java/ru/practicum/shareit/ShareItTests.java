@@ -10,7 +10,7 @@ import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.user.UserController;
 
 @SpringBootTest
-class ShareItTests {
+public class ShareItTests {
     @Autowired
     private UserController userController;
 
@@ -24,7 +24,7 @@ class ShareItTests {
     private ItemRequestController itemRequestController;
 
     @Test
-    void contextLoads() {
+    public void contextLoads() {
         Assertions.assertThat(userController).isNotNull();
         Assertions.assertThat(itemController).isNotNull();
         Assertions.assertThat(bookingController).isNotNull();

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-class ItemRequestServiceImplDataBaseTest {
+public class ItemRequestServiceImplDataBaseTest {
 
     private final UserServiceImpl userService;
 
@@ -46,9 +46,8 @@ class ItemRequestServiceImplDataBaseTest {
     private final Item itemNumberTwo = new Item(null, "Мультипекарь", "Мультипекарь Redmond",
             true, userNumberOne, null);
 
-
     @Test
-    void getAllItemRequests() {
+    public void getAllItemRequests() {
         User userNumberOneSaved = userService.createUser(userNumberOne);
         User userNumberTwoSaved = userService.createUser(userNumberTwo);
 
@@ -65,6 +64,5 @@ class ItemRequestServiceImplDataBaseTest {
         List<ItemRequestDtoWithAnswers> requests = new ArrayList<>();
 
         assertEquals(requestsExpected, requests);
-
     }
 }

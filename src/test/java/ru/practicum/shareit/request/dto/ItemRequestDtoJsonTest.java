@@ -16,24 +16,24 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
-class ItemRequestDtoJsonTest {
+public class ItemRequestDtoJsonTest {
 
     @Autowired
     private JacksonTester<ItemRequestDtoWithAnswers> json;
 
-    User owner = new User(1L, "Linar", "Linar@xakep.ru");
+    private final User owner = new User(1L, "Linar", "Linar@xakep.ru");
 
-    User requestor = new User(2L, "Lenar", "Lenar@xakep.ru");
+    private final User requestor = new User(2L, "Lenar", "Lenar@xakep.ru");
 
-    ItemRequest request = new ItemRequest(1L,
+    private final ItemRequest request = new ItemRequest(1L,
             "Нужна алмазная пила", requestor, LocalDateTime.of(2024, 05, 23, 23,
             33, 33));
 
-    ItemDtoWithoutOwner item = new ItemDtoWithoutOwner(1L, "Алмазная пила", "Алмазная пила Makita",
+    private final ItemDtoWithoutOwner item = new ItemDtoWithoutOwner(1L, "Алмазная пила", "Алмазная пила Makita",
             true, 1L);
 
     @Test
-    void testItemRequestDtoWithAnswers() throws Exception {
+    public void testItemRequestDtoWithAnswers() throws Exception {
         List<ItemDtoWithoutOwner> items = new ArrayList<>();
         items.add(item);
 
