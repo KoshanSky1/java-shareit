@@ -27,13 +27,18 @@ import static ru.practicum.shareit.item.dto.ItemMapper.*;
 public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
+
     private static final String SHARER_USER_ID = "X-Sharer-User-Id";
 
     @PostMapping
-    public Item createItem(@RequestHeader(SHARER_USER_ID) long userId,
-                           @Valid @RequestBody ItemDto itemDto) {
+    public ItemDto createItem(@RequestHeader(SHARER_USER_ID) long userId,
+                              @Valid @RequestBody ItemDto itemDto) {
         log.info("---START CREATE ITEM ENDPOINT---");
-        return itemService.addNewItem(userId, toItem(itemDto));
+        if (itemDto.getRequestId() != null) {
+            return itemService.addNewItemWithRequest(userId, toItem(itemDto), itemDto.getRequestId());
+        } else {
+            return itemService.addNewItemWithoutRequest(userId, toItem(itemDto));
+        }
     }
 
     @PatchMapping("/{itemId}")
@@ -51,23 +56,28 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDtoWithBooking> findItemsByUser(@RequestHeader(SHARER_USER_ID) long ownerId) {
+    public List<ItemDtoWithBooking> findItemsByUser(@RequestHeader(SHARER_USER_ID) long ownerId,
+                                                    @RequestParam(defaultValue = "0") int from,
+                                                    @RequestParam(defaultValue = "10") int size) {
         log.info("---START FIND ITEMS BY USER ENDPOINT---");
-        return itemService.getItems(ownerId);
+        return itemService.getItems(ownerId, from, size);
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<Item>> searchItems(@RequestHeader(SHARER_USER_ID) long userId,
-                                                  @RequestParam String text) {
+                                                  @RequestParam String text,
+                                                  @RequestParam(defaultValue = "0") int from,
+                                                  @RequestParam(defaultValue = "10") int size) {
         log.info("---START SEARCH ITEMS ENDPOINT---");
-        return new ResponseEntity<>(itemService.searchItems(userId, text), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.searchItems(userId, text, from, size), HttpStatus.OK);
     }
 
     @PostMapping("/{itemId}/comment")
     public CommentDto createComment(@RequestHeader(SHARER_USER_ID) long userId,
                                     @PathVariable long itemId, @Valid @RequestBody CommentDto commentDto) {
         log.info("---START CREATE COMMENT ENDPOINT---");
-        return toCommentDto(itemService.addNewComment(userId, itemId, toComment(commentDto, userService.getUser(userId).orElseThrow())));
+        return toCommentDto(itemService.addNewComment(userId, itemId, toComment(commentDto,
+                userService.getUser(userId).orElse(null))));
     }
 
 }

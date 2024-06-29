@@ -2,19 +2,16 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.BookingStateNotFoundException;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.ItemValidationException;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.exception.UserNotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.String.format;
 import static ru.practicum.shareit.booking.BookingState.ALL;
@@ -25,7 +22,6 @@ import static ru.practicum.shareit.booking.BookingState.ALL;
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository repository;
     private final UserService userService;
-    private final ItemService itemService;
 
     @Override
     public Booking createBooking(long userId, Booking booking) {
@@ -90,9 +86,15 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingsByUserId(long userId, BookingState state) {
+    public List<Booking> getAllBookingsByUserId(long userId, BookingState state, int from, int size) {
         userService.getUser(userId);
         List<Booking> bookings = new ArrayList<>();
+        PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+
+        if (from < 0 || size <= 0) {
+            throw new ItemValidationException("Индекс первого элемента не может быть отрицательным," +
+                    " количество элементов для отображения должно быть больше 0");
+        }
 
         if (state == null) {
             state = ALL;
@@ -125,13 +127,18 @@ public class BookingServiceImpl implements BookingService {
         bookings.sort(Comparator.comparing(Booking::getStart).reversed());
         log.info(format("Сформирован список бронирований для пользователя id=[%s], state=[%s]", userId, state));
 
-        return bookings;
+        return pagedResponse(bookings, from, size);
     }
 
     @Override
-    public List<Booking> getAllBookingsForAllUserThings(long ownerId, BookingState state) {
+    public List<Booking> getAllBookingsForAllUserThings(long ownerId, BookingState state, int from, int size) {
         userService.getUser(ownerId);
         List<Booking> bookings = new ArrayList<>();
+
+        if (from < 0 || size <= 0) {
+            throw new ItemValidationException("Индекс первого элемента не может быть отрицательным," +
+                    " количество элементов для отображения должно быть больше 0");
+        }
 
         if (state == null) {
             state = ALL;
@@ -163,7 +170,7 @@ public class BookingServiceImpl implements BookingService {
         bookings.sort(Comparator.comparing(Booking::getStart).reversed());
         log.info(format("Сформирован список бронирований для владельца вещей id=[%s], state=[%s]", ownerId, state));
 
-        return bookings;
+        return pagedResponse(bookings, from, size);
     }
 
     @Override
@@ -188,6 +195,20 @@ public class BookingServiceImpl implements BookingService {
             }
         }
         throw new BookingStateNotFoundException("Unknown state: " + name);
+    }
+
+    private List<Booking> pagedResponse(List<Booking> bookings, int from, int size) {
+        int totalBookings = bookings.size();
+        int toIndex = from + size;
+
+        if (from <= totalBookings) {
+            if (toIndex > totalBookings) {
+                toIndex = totalBookings;
+            }
+            return bookings.subList(from, toIndex);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
 }
