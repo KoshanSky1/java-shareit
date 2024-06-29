@@ -152,13 +152,13 @@ class ItemControllerTest {
         when(itemService.addNewComment(anyLong(), anyLong(), any()))
                 .thenReturn(comment);
 
-        mvc.perform(post("/1/comment")
-                        .content(mapper.writeValueAsString(comment))
+        mvc.perform(post("/items/1/comment")
+                        .content(mapper.writeValueAsString(commentDto))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(SHARER_USER_ID, 1))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
     }
 
     @Test

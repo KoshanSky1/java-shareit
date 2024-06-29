@@ -115,6 +115,21 @@ class BookingServiceImplTest {
     }
 
     @Test
+    void confirmOrRejectBookingByBooker() {
+        owner = userService.createUser(owner);
+        booker = userService.createUser(booker);
+        itemService.addNewItemWithoutRequest(owner.getId(), item);
+        bookingNumberOne = bookingService.createBooking(booker.getId(), bookingNumberOne);
+
+        bookingService.confirmOrRejectBooking(booker.getId(), bookingNumberOne.getId(), false);
+
+        Optional<Booking> bookingSaved = bookingService.getBookingById(owner.getId(), bookingNumberOne.getId());
+        System.out.println(bookingSaved);
+
+        assertTrue(bookingSaved.isPresent());
+    }
+
+    @Test
     void confirmOrRejectBookingWithOwner() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);

@@ -77,7 +77,7 @@ public class ItemController {
                                     @PathVariable long itemId, @Valid @RequestBody CommentDto commentDto) {
         log.info("---START CREATE COMMENT ENDPOINT---");
         return toCommentDto(itemService.addNewComment(userId, itemId, toComment(commentDto,
-                userService.getUser(userId).orElseThrow())));
+                userService.getUser(userId).orElse(null))));
     }
 
 }
