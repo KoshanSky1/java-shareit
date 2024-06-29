@@ -323,6 +323,56 @@ class ItemServiceImplTest {
     }
 
     @Test
+    void getItemWithBookings() {
+        owner = userService.createUser(owner);
+        booker = userService.createUser(booker);
+        ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
+        bookingNumberTwo = bookingService.createBooking(booker.getId(), bookingNumberTwo);
+        bookingService.confirmOrRejectBooking(owner.getId(), bookingNumberTwo.getId(), true);
+        bookingNumberTwo.setStart(LocalDateTime.of(2024, 04, 29, 23, 33, 33));
+        bookingNumberTwo.setEnd(LocalDateTime.of(2024, 05, 29, 23, 33, 33));
+
+        bookingNumberThree = bookingService.createBooking(booker.getId(), bookingNumberThree);
+        bookingService.confirmOrRejectBooking(owner.getId(), bookingNumberThree.getId(), true);
+
+        ItemDtoWithBooking bookingSaved = itemService.getItemWithBooking(owner.getId(), itemDto.getId());
+
+        assertNotNull(bookingSaved.getLastBooking());
+        assertNotNull(bookingSaved.getNextBooking());
+    }
+
+    @Test
+    void getItemWithBookingsByBooker() {
+        owner = userService.createUser(owner);
+        booker = userService.createUser(booker);
+        ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
+        bookingNumberTwo = bookingService.createBooking(booker.getId(), bookingNumberTwo);
+        bookingService.confirmOrRejectBooking(owner.getId(), bookingNumberTwo.getId(), true);
+        bookingNumberTwo.setStart(LocalDateTime.of(2024, 04, 29, 23, 33, 33));
+        bookingNumberTwo.setEnd(LocalDateTime.of(2024, 05, 29, 23, 33, 33));
+
+        bookingNumberThree = bookingService.createBooking(booker.getId(), bookingNumberThree);
+        bookingService.confirmOrRejectBooking(owner.getId(), bookingNumberThree.getId(), true);
+
+        ItemDtoWithBooking bookingSaved = itemService.getItemWithBooking(booker.getId(), itemDto.getId());
+
+        assertNull(bookingSaved.getLastBooking());
+        assertNull(bookingSaved.getNextBooking());
+    }
+
+    @Test
+    void getItemWithoutBookings() {
+        owner = userService.createUser(owner);
+        booker = userService.createUser(booker);
+        ItemDto itemDto = itemService.addNewItemWithoutRequest(owner.getId(), itemWithoutRequest);
+
+        ItemDtoWithBooking itemSaved = itemService.getItemWithBooking(owner.getId(), itemDto.getId());
+
+        assertNull(itemSaved.getLastBooking());
+        assertNull(itemSaved.getNextBooking());
+    }
+
+    @Test
     void addNewComment() {
         owner = userService.createUser(owner);
         booker = userService.createUser(booker);
