@@ -51,16 +51,21 @@ public class BookingController {
 
     @GetMapping
     public ResponseEntity<List<Booking>> getAllBookingsByUser(@RequestHeader(SHARER_USER_ID) long userId,
-                                                              @RequestParam(defaultValue = "ALL") String state) {
+                                                              @RequestParam(defaultValue = "ALL") String state,
+                                                              @RequestParam(defaultValue = "0") int from,
+                                                              @RequestParam(defaultValue = "10") int size) {
         log.info("---START GET ALL BOOKINGS BY USER ENDPOINT---");
-        return new ResponseEntity<>(bookingService.getAllBookingsByUserId(userId, findByState(state)), HttpStatus.OK);
+        return new ResponseEntity<>(bookingService.getAllBookingsByUserId(userId, findByState(state), from, size),
+                HttpStatus.OK);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<List<Booking>> getAllBookingsForAllUserThings(@RequestHeader(SHARER_USER_ID) long userId,
-                                                                        @RequestParam(defaultValue = "ALL") String state) {
+                                                                        @RequestParam(defaultValue = "ALL") String state,
+                                                                        @RequestParam(defaultValue = "0") int from,
+                                                                        @RequestParam(defaultValue = "10") int size) {
         log.info("---START GET ALL BOOKINGS BY OWNER ENDPOINT---");
-        return new ResponseEntity<>(bookingService.getAllBookingsForAllUserThings(userId, findByState(state)),
+        return new ResponseEntity<>(bookingService.getAllBookingsForAllUserThings(userId, findByState(state), from, size),
                 HttpStatus.OK);
     }
 

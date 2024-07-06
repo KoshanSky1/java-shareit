@@ -1,13 +1,19 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.booking.dto.BookingReducedDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public class ItemMapper {
+
+    private final ItemRequestService itemRequestService;
 
     public static ItemDto toItemDto(Item item) {
         return new ItemDto(
@@ -16,7 +22,7 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getOwner(),
-                item.getRequest()
+                getLongValueOrDefault(item.getRequest())
         );
     }
 
@@ -28,7 +34,7 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 itemDto.getOwner(),
-                itemDto.getRequest()
+                null
         );
     }
 
@@ -40,10 +46,20 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 item.getOwner(),
-                item.getRequest(),
+                getLongValueOrDefault(item.getRequest()),
                 lastBooking,
                 nextBooking,
                 comments
+        );
+    }
+
+    public static ItemDtoWithoutOwner toItemDtoWithoutOwner(Item item) {
+        return new ItemDtoWithoutOwner(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                getLongValueOrDefault(item.getRequest())
         );
     }
 
@@ -65,6 +81,14 @@ public class ItemMapper {
                 comment.getAuthor().getName(),
                 comment.getCreated()
         );
+    }
+
+    private static Long getLongValueOrDefault(ItemRequest value) {
+        if (value == null) {
+            return null;
+        } else {
+            return value.getId();
+        }
     }
 
 }
